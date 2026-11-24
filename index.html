@@ -49,9 +49,79 @@
 .compact-add span{font-size:11px;color:#65808d;font-weight:500}
 .compact-add:hover{background:#e8f7f4}
 @media(max-width:800px){.compact-list{grid-template-columns:1fr}}
+
+/* Decision tools */
+.decision-tools{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.toolbox{background:#f7fafc;border:1px solid #e1e9ef;border-radius:13px;padding:19px;min-width:0}
+.toolbox h3{font-size:17px;margin:0 0 6px;letter-spacing:-.02em}
+.toolbox p{margin:0 0 14px;font-size:12px;color:#62778b;line-height:1.55}
+.tool-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tool-field label{display:block;font-size:12px;font-weight:750;color:#395369;margin-bottom:5px}
+.tool-field input,.tool-field select{width:100%;border-radius:9px;border:1px solid #ccdae6;background:white;padding:10px 11px;color:#14243b;min-width:0}
+.tool-field.wide{grid-column:1/-1}
+.tool-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.tool-result{margin-top:15px;background:#eaf7f4;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.65}
+.tool-result.warning{background:#fff7e8;color:#785325}
+.tool-result strong{color:#08796c}
+.tool-note{color:#62778b;font-size:11px;line-height:1.45;margin-top:10px}
+.tool-pill{display:inline-block;padding:4px 7px;background:#e6f5f1;color:#087c70;border-radius:7px;font-weight:750;font-size:11px}
+.afford-table{margin-top:12px;display:grid;gap:8px}
+.afford-row{border:1px solid #dbe8ed;border-radius:9px;padding:10px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.afford-row .info{min-width:0;font-size:13px}.afford-row .info strong{display:block;overflow-wrap:anywhere}.afford-row .info span{font-size:11px;color:#64768a}
+.afford-status{font-size:12px;font-weight:800;text-align:right;white-space:nowrap}.afford-status.over{color:#b54734}.afford-status.under{color:#087f79}
+.export-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.highlight-warning{padding:12px 14px;background:#fff7e8;border-radius:9px;color:#805c26;font-size:12px;line-height:1.65;margin-top:13px}
+@media(max-width:850px){.decision-tools{grid-template-columns:1fr}}
+@media(max-width:480px){.tool-fields{grid-template-columns:1fr}.tool-field.wide{grid-column:auto}}
+@media print {
+ body{background:white!important;color:#14243b!important;font-size:11pt}
+ header,.shortlist-panel,#insightsPanel,#decisionPanel,#comparisonPanel,.footer,.overlay,.toast,.method{display:none!important}
+ #printReport{display:block!important;position:static!important;background:white!important;padding:0!important}
+ #printReport h1{font-size:23pt;color:#14243b;margin:0 0 8px}
+ #printReport h2{font-size:14pt;margin:23px 0 10px}
+ #printReport p{font-size:10pt;line-height:1.45}
+ #printReport table{width:100%;border-collapse:collapse;font-size:9pt}
+ #printReport th,#printReport td{padding:8px;text-align:right;border:1px solid #c9d7df}
+ #printReport th:first-child,#printReport td:first-child{text-align:left}
+ #printReport .report-notes{font-size:9pt;color:#444;white-space:pre-wrap}
+ @page{size:landscape;margin:13mm}
+}
+#printReport{display:none}
 </style></head><body>
 <header class="top"><div class="shell"><nav class="nav"><div class="logo">hidden<span>cost.</span></div><div class="nav-right">Make the smarter rental decision.</div></nav><div class="hero"><div><div class="eyebrow">Rental comparison, without the surprises</div><h1>The rent you see isn't always <em>the rent you pay.</em></h1><p>Compare apartments using recurring fees, one-time costs, deposits and rent specials—not just the number in the listing.</p><button class="cta" id="heroAdd">+ Add an apartment</button> <button class="ghost" id="heroDemo">Load demo apartments</button></div><div class="hero-card"><div class="label">Example advertised monthly rent</div><div class="big">$1,500</div><div class="break">+ $245 in extra monthly charges</div><hr><div class="minirow"><span>Parking</span><strong>$125</strong></div><div class="minirow"><span>Utilities</span><strong>$85</strong></div><div class="minirow"><span>Amenity + trash fees</span><strong>$35</strong></div><hr><div class="minirow"><span>Actual regular monthly cost</span><strong>$1,745</strong></div></div></div></div></header>
-<main class="shell content"><section class="panel" id="insightsPanel" style="margin-top:0"><h2>HiddenCost Insights</h2><div class="subtle">The important differences, without scanning a chart.</div><div id="insights"></div><div id="takeaway" class="takeaway"></div><div id="feeInsight" class="fee-insight"></div></section><section class="panel shortlist-panel"><div class="toolbar"><div><h2>Your apartment shortlist</h2><div class="subtle">Add and manage up to ten apartments. All amounts are estimates in USD.</div></div><div class="actions"><button class="secondary" id="resetDemo">↻ Reset demo</button><button class="primary" id="addBtn">+ Add apartment</button></div></div><div id="cards" class="grid compact-list"></div></section><section class="panel"><h2>Compare the full picture</h2><div class="subtle">Standardized to each apartment's entered lease term. A different lease length means total lease costs are not directly comparable.</div><div id="comparison" class="comparison"></div><div id="compareNote" class="note"></div></section><div class="method"><b>How HiddenCost calculates:</b> Regular monthly cost = base rent + recurring fees + estimated utilities. Effective monthly cost = (regular monthly cost × lease months + one-time nonrefundable fees − rent concessions) ÷ lease months. Upfront cash is shown separately and can include refundable deposits; these deposits are not counted as an expense. Any unspecified cost may change the estimate. This tool does not verify lease terms or estimate future utility bills.</div></main><footer class="footer">HiddenCost • Educational MVP • Data is saved only in this browser</footer>
+<main class="shell content"><section class="panel" id="insightsPanel" style="margin-top:0"><h2>HiddenCost Insights</h2><div class="subtle">The important differences, without scanning a chart.</div><div id="insights"></div><div id="takeaway" class="takeaway"></div><div id="feeInsight" class="fee-insight"></div></section>
+<section class="panel" id="decisionPanel">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<div><h2>Decision tools</h2><div class="subtle">Explore alternate assumptions and see which apartments fit your budget.</div></div>
+<button type="button" class="secondary" id="exportReport">↓ Export comparison as PDF</button>
+</div>
+<div class="decision-tools" style="margin-top:18px">
+<div class="toolbox">
+<h3>Interactive what-if analysis</h3>
+<p>Experiment with one apartment at a time. Changes update the shortlist, insights and comparison immediately. <strong>Saved listing details stay unchanged.</strong></p>
+<div class="tool-fields">
+<div class="tool-field wide"><label for="scenarioApartment">Apartment to adjust</label><select id="scenarioApartment"></select></div>
+<div class="tool-field"><label for="whatParking">Parking per month ($)</label><input id="whatParking" type="number" min="0" step="1" placeholder="Unknown"></div>
+<div class="tool-field"><label for="whatUtilities">Utilities per month ($)</label><input id="whatUtilities" type="number" min="0" step="1" placeholder="Unknown"></div>
+<div class="tool-field"><label for="whatInternet">Internet per month ($)</label><input id="whatInternet" type="number" min="0" step="1" placeholder="Unknown"></div>
+<div class="tool-field"><label for="whatFees">Other monthly fees ($)</label><input id="whatFees" type="number" min="0" step="1" placeholder="Unknown"></div>
+<div class="tool-field"><label for="whatOnce">One-time nonrefundable fees ($)</label><input id="whatOnce" type="number" min="0" step="1" placeholder="Unknown"></div>
+<div class="tool-field"><label for="whatConcession">Total concessions ($)</label><input id="whatConcession" type="number" min="0" step="1" placeholder="Unknown"></div>
+</div>
+<div class="tool-row"><button class="secondary" type="button" id="resetWhatIf">Reset what-if changes</button><span id="scenarioCount" class="tool-pill">Original estimates</span></div>
+<div id="scenarioResult" class="tool-result" aria-live="polite"></div>
+</div>
+<div class="toolbox">
+<h3>Rental affordability</h3>
+<p>Enter the maximum <strong>total housing amount you can spend each month</strong>. This is your budget, not your income. Estimates include entered costs and lease concessions.</p>
+<div class="tool-field"><label for="monthlyBudget">Your monthly housing budget ($)</label><input id="monthlyBudget" type="number" min="1" step="25" placeholder="e.g., 1900"></div>
+<div id="affordResult" aria-live="polite" class="tool-result">Enter a budget to see which apartments fit.</div>
+<div class="tool-note">A budget fit is provisional when fees are unknown; rental affordability also depends on other expenses and your financial circumstances.</div>
+</div>
+</div>
+<div class="highlight-warning" id="feeDetection" aria-live="polite"></div>
+<div class="tool-note">PDF export uses your browser's print dialog. Choose <strong>Save as PDF</strong> as the destination. Your data stays in this browser; it is not uploaded to a server.</div>
+</section><section class="panel shortlist-panel"><div class="toolbar"><div><h2>Your apartment shortlist</h2><div class="subtle">Add and manage up to ten apartments. All amounts are estimates in USD.</div></div><div class="actions"><button class="secondary" id="resetDemo">↻ Reset demo</button><button class="primary" id="addBtn">+ Add apartment</button></div></div><div id="cards" class="grid compact-list"></div></section><section class="panel" id="comparisonPanel"><h2>Compare the full picture</h2><div class="subtle">Standardized to each apartment's entered lease term. A different lease length means total lease costs are not directly comparable.</div><div id="comparison" class="comparison"></div><div id="compareNote" class="note"></div></section><div class="method"><b>How HiddenCost calculates:</b> Regular monthly cost = base rent + recurring fees + estimated utilities. Effective monthly cost = (regular monthly cost × lease months + one-time nonrefundable fees − rent concessions) ÷ lease months. Upfront cash is shown separately and can include refundable deposits; these deposits are not counted as an expense. Any unspecified cost may change the estimate. This tool does not verify lease terms or estimate future utility bills.</div></main><div id="printReport" aria-hidden="true"></div><footer class="footer">HiddenCost • Educational MVP • Data is saved only in this browser</footer>
 <div id="overlay" class="overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><h2 id="modalTitle">Add apartment</h2><p>Enter known costs. Leave unknown amounts blank to flag them.</p></div><button class="close" id="closeModal" aria-label="Close">×</button></div><form id="aptForm"><div class="modal-body">
 <section class="analyzer" aria-labelledby="analyzerTitle">
 <h3 id="analyzerTitle">✦ Smart Listing Analyzer <span style="font-size:11px;font-weight:500;color:#57788a">(no AI account needed)</span></h3>
@@ -63,19 +133,137 @@
 </section><div class="section-title">Apartment details</div><div class="fields"><div class="field"><label for="name">Apartment name *</label><input id="name" maxlength="65" required placeholder="e.g., Oak Ridge Apartments"/></div><div class="field"><label for="months">Lease duration (months) *</label><input type="number" id="months" min="1" max="60" step="1" value="12" required/></div><div class="field"><label for="rent">Advertised base rent ($/month) *</label><input type="number" id="rent" min="0" step="0.01" required placeholder="1600"/></div><div class="field"><label for="parking">Parking ($/month)</label><input type="number" id="parking" min="0" step="0.01" placeholder="Unknown"/></div><div class="field"><label for="utilities">Estimated utilities ($/month)</label><input type="number" id="utilities" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Electric, gas, water, etc. Use your own estimate.</div></div><div class="field"><label for="internet">Internet ($/month)</label><input type="number" id="internet" min="0" step="0.01" placeholder="Unknown"/></div><div class="field"><label for="fees">Other recurring fees ($/month)</label><input type="number" id="fees" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Trash, amenities, pest control, etc.</div></div><div class="field"><label for="once">One-time nonrefundable fees ($)</label><input type="number" id="once" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Application, admin and other fees.</div></div><div class="field"><label for="deposit">Refundable security deposit ($)</label><input type="number" id="deposit" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Cash needed upfront, not a lease expense.</div></div><div class="field"><label for="concession">Total rent concessions ($)</label><input type="number" id="concession" min="0" step="0.01" placeholder="0"/><div class="hint">Example: one month of $1,600 rent free → enter 1600.</div></div></div><hr class="line-sep"/><div class="section-title">Upfront estimate</div><label class="checkline"><input type="checkbox" id="firstMonth" checked/> Include one regular month's cost in upfront cash estimate</label><div class="desc">Upfront cash = nonrefundable one-time fees + refundable deposit + optional first month's regular cost. Actual payment timing may vary; concessions are applied only to the lease-cost estimate.</div></div><div class="modal-actions"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button type="submit" class="primary">Save apartment</button></div></form></div></div><div id="replaceOverlay" class="overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="replaceTitle" style="width:min(520px,100%)"><div class="modal-head"><div><h2 id="replaceTitle">Your shortlist has 10 apartments</h2><p>Choose an apartment to replace with a new one, or cancel. The selected apartment will be removed only after confirmation.</p></div><button type="button" class="close" id="closeReplace" aria-label="Close">×</button></div><div class="modal-body" id="replaceOptions"></div><div class="modal-actions"><button type="button" class="secondary" id="cancelReplace">Keep all apartments</button></div></div></div><div id="toast" class="toast" role="status"></div>
 <script>
 (()=>{'use strict';const KEY='hiddencost-v1';const ids=['name','months','rent','parking','utilities','internet','fees','once','deposit','concession'];let entries=[];let editing=null;const $=id=>document.getElementById(id);const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const demo=[{id:'demo-a',name:'Oak Ridge',months:12,rent:1500,parking:125,utilities:90,internet:65,fees:55,once:175,deposit:500,concession:0,firstMonth:true},{id:'demo-b',name:'The Juniper',months:12,rent:1650,parking:0,utilities:100,internet:0,fees:35,once:75,deposit:400,concession:1650,firstMonth:true},{id:'demo-c',name:'Parkside Flats',months:12,rent:1595,parking:80,utilities:110,internet:55,fees:30,once:225,deposit:600,concession:500,firstMonth:true}];
-function read(){try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x))return x.filter(v=>v&&typeof v.name==='string').slice(0,10)}catch{}return null}function persist(){try{localStorage.setItem(KEY,JSON.stringify(entries))}catch{toast('Browser storage unavailable. Changes may not persist.')}}function val(x){return x===''||x===null||x===undefined?null:Number(x)}function num(x){return Number.isFinite(Number(x))&&x!==null?Number(x):0}function calc(a){let recurring=num(a.rent)+num(a.parking)+num(a.utilities)+num(a.internet)+num(a.fees),one=num(a.once),con=num(a.concession),months=num(a.months);let total=Math.max(0,recurring*months+one-con);let missing=['parking','utilities','internet','fees','once','deposit'].filter(k=>a[k]===null||a[k]===undefined);return{recurring,total,effective:total/months,upfront:one+num(a.deposit)+(a.firstMonth?recurring:0),missing,extras:recurring-num(a.rent)}}function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3100)}function render(){
+function read(){try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x))return x.filter(v=>v&&typeof v.name==='string').slice(0,10)}catch{}return null}function persist(){try{localStorage.setItem(KEY,JSON.stringify(entries))}catch{toast('Browser storage unavailable. Changes may not persist.')}}function val(x){return x===''||x===null||x===undefined?null:Number(x)}function num(x){return Number.isFinite(Number(x))&&x!==null?Number(x):0}function calc(a){let recurring=num(a.rent)+num(a.parking)+num(a.utilities)+num(a.internet)+num(a.fees),one=num(a.once),con=num(a.concession),months=num(a.months);let total=Math.max(0,recurring*months+one-con);let missing=['parking','utilities','internet','fees','once','deposit'].filter(k=>a[k]===null||a[k]===undefined);return{recurring,total,effective:total/months,upfront:one+num(a.deposit)+(a.firstMonth?recurring:0),missing,extras:recurring-num(a.rent)}}
+const scenarioOverrides={};
+let activeScenario=null;
+let budgetAmount=null;
+const scenarioFields={whatParking:'parking',whatUtilities:'utilities',whatInternet:'internet',whatFees:'fees',whatOnce:'once',whatConcession:'concession'};
+function scenarioCalc(a){
+ const overrides=scenarioOverrides[a.id];
+ return overrides?calc(Object.assign({},a,overrides)):calc(a);
+}
+function displayOriginal(a){return calc(a).effective;}
+function renderScenarioControls(){
+ const select=$('scenarioApartment');
+ const old=activeScenario;
+ if(!entries.some(x=>x.id===activeScenario))activeScenario=entries[0]?.id||null;
+ select.innerHTML=entries.length?entries.map(a=>'<option value="'+safe(a.id)+'">'+safe(a.name)+'</option>').join(''):'<option value="">No apartments saved</option>';
+ select.disabled=!entries.length;
+ select.value=activeScenario||'';
+ populateScenario();
+}
+function populateScenario(){
+ const a=entries.find(x=>x.id===activeScenario);
+ const overrides=a?scenarioOverrides[a.id]||{}:{};
+ for(const [element,key] of Object.entries(scenarioFields)){
+   const el=$(element), value=a?(Object.prototype.hasOwnProperty.call(overrides,key)?overrides[key]:a[key]):null;
+   el.value=value===null||value===undefined?'':String(value);
+   el.disabled=!a;
+ }
+ $('resetWhatIf').disabled=Object.keys(scenarioOverrides).length===0;
+}
+function handleScenarioChange(e){
+ const a=entries.find(x=>x.id===activeScenario);
+ if(!a)return;
+ const key=scenarioFields[e.target.id];if(!key)return;
+ const raw=e.target.value.trim();
+ if(raw!==''&&(!Number.isFinite(Number(raw))||Number(raw)<0||Number(raw)>10000000)){
+   e.target.setCustomValidity('Enter a nonnegative cost below $10,000,000.');
+   e.target.reportValidity();return;
+ }
+ e.target.setCustomValidity('');
+ const amount=raw===''?null:Number(raw);
+ const baseline=a[key]===undefined?null:a[key];
+ if(amount===baseline){
+   if(scenarioOverrides[a.id])delete scenarioOverrides[a.id][key];
+ }else{
+   if(!scenarioOverrides[a.id])scenarioOverrides[a.id]={};
+   scenarioOverrides[a.id][key]=amount;
+ }
+ if(scenarioOverrides[a.id]&&Object.keys(scenarioOverrides[a.id]).length===0)delete scenarioOverrides[a.id];
+ updateDecisionResults();
+}
+function updateDecisionResults(){
+ renderInsights();renderCompare();renderCardsOnly();renderAffordability();renderFeeDetection();
+ const a=entries.find(x=>x.id===activeScenario);
+ const changed=Object.keys(scenarioOverrides).length;
+ $('scenarioCount').textContent=changed?changed+' apartment'+(changed===1?'':'s')+' adjusted':'Original estimates';
+ $('resetWhatIf').disabled=changed===0;
+ if(!a){$('scenarioResult').textContent='Add an apartment to compare different cost scenarios.';return}
+ const old=calc(a), now=scenarioCalc(a), delta=now.effective-old.effective;
+ const missing=now.missing.length?' ('+now.missing.length+' cost fields still unknown)':'';
+ $('scenarioResult').innerHTML='<strong>'+safe(a.name)+'</strong>: '+money(now.effective)+'/mo effective estimate. '+(Math.abs(delta)<.005?'No change from saved details.':(delta>0?'Up ':'Down ')+money(Math.abs(delta))+'/mo versus the saved estimate.')+'<span style="color:#697b8c">'+missing+'</span>';
+}
+function renderCardsOnly(){
  const cards=$('cards');
- cards.innerHTML=entries.map((a,i)=>{
-   const c=calc(a);
-   return '<article class="compact-apt"><div class="compact-main"><div class="compact-apt-name">'+safe(a.name)+'</div><div class="compact-apt-meta">'+a.months+'-month lease · Advertised '+money(num(a.rent))+'/mo</div></div><div class="compact-prices"><strong>'+money(c.effective)+'</strong><span>estimated effective / mo</span></div><div class="compact-tools"><span class="'+(c.missing.length?'incomplete-label':'complete-label')+'">'+(c.missing.length?'⚠ '+c.missing.length+' unknown fields':'✓ Fees entered')+'</span><button class="link" data-act="edit" data-id="'+safe(a.id)+'">Edit</button><button class="link danger" data-act="delete" data-id="'+safe(a.id)+'">Remove</button></div></article>';
+ cards.innerHTML=entries.map(a=>{
+  const c=scenarioCalc(a), changed=!!scenarioOverrides[a.id];
+  return '<article class="compact-apt"><div class="compact-main"><div class="compact-apt-name">'+safe(a.name)+(changed?' <span class="tool-pill">What-if</span>':'')+'</div><div class="compact-apt-meta">'+a.months+'-month lease · Advertised '+money(num(a.rent))+'/mo</div></div><div class="compact-prices"><strong>'+money(c.effective)+'</strong><span>estimated effective / mo</span></div><div class="compact-tools"><span class="'+(c.missing.length?'incomplete-label':'complete-label')+'">'+(c.missing.length?'⚠ '+c.missing.length+' unknown fields':'✓ Fees entered')+'</span><button class="link" data-act="edit" data-id="'+safe(a.id)+'">Edit</button><button class="link danger" data-act="delete" data-id="'+safe(a.id)+'">Remove</button></div></article>';
  }).join('');
  if(entries.length<10)cards.innerHTML+='<button type="button" class="compact-add" data-act="add">＋ Add another apartment <span>('+entries.length+'/10 saved)</span></button>';
  if(!entries.length)cards.innerHTML='<div class="empty" style="grid-column:1/-1;min-height:150px"><strong>Your shortlist is empty</strong><span>Load demo apartments or add your first listing.</span><button class="primary" style="margin-top:12px" data-act="add">Add an apartment</button></div>';
- renderInsights();renderCompare();
 }
+function renderAffordability(){
+ const root=$('affordResult');
+ const raw=$('monthlyBudget').value.trim();
+ if(raw===''){budgetAmount=null;root.className='tool-result';root.textContent='Enter a budget to see which apartments fit.';return}
+ const amount=Number(raw);
+ if(!Number.isFinite(amount)||amount<=0||amount>100000000){root.className='tool-result warning';root.textContent='Enter a valid positive monthly budget.';return}
+ budgetAmount=amount;
+ if(!entries.length){root.textContent='Add an apartment to check affordability.';return}
+ root.className='tool-result';
+ const within=entries.filter(a=>scenarioCalc(a).effective<=amount).length;
+ root.innerHTML='<strong>'+within+' of '+entries.length+' apartment'+(entries.length===1?'':'s')+'</strong> have an estimated monthly cost within '+money(amount)+'.<div class="afford-table">'+entries.map(a=>{
+   const c=scenarioCalc(a),left=amount-c.effective,within=left>=-0.005;
+   return '<div class="afford-row"><div class="info"><strong>'+safe(a.name)+'</strong><span>'+money(c.effective)+'/mo'+(c.missing.length?' · '+c.missing.length+' unknown fields':'')+'</span></div><div class="afford-status '+(within?'under':'over')+'">'+(within?money(Math.max(0,left))+' remaining':money(Math.abs(left))+' over')+(c.missing.length?'*':'')+'</div></div>';
+ }).join('')+'</div>'+(entries.some(a=>scenarioCalc(a).missing.length)?'<div class="tool-note">*Provisional: missing expenses are excluded, not assumed free.</div>':'');
+}
+function renderFeeDetection(){
+ const root=$('feeDetection');
+ if(!entries.length){root.textContent='Hidden fee warnings will appear when you add apartments.';return}
+ const details=[];
+ for(const a of entries){
+  const c=scenarioCalc(a);
+  const unknown=c.missing.filter(x=>x!=='deposit');
+  const share=num(a.rent)>0?c.extras/num(a.rent):null;
+  if(unknown.length)details.push('<strong>'+safe(a.name)+'</strong>: '+unknown.length+' unconfirmed fee categor'+(unknown.length===1?'y':'ies')+' ('+unknown.map(k=>({parking:'parking',utilities:'utilities',internet:'internet',fees:'other monthly fees',once:'one-time fees'}[k])).join(', ')+').');
+  if(share!==null&&share>=.10)details.push('<strong>'+safe(a.name)+'</strong>: entered recurring add-ons equal '+Math.round(share*100)+'% of advertised rent ('+money(c.extras)+'/mo).');
+  if(c.missing.includes('deposit'))details.push('<strong>'+safe(a.name)+'</strong>: refundable deposit not yet confirmed.');
+ }
+ root.innerHTML='<strong>Hidden fee detection:</strong> '+(details.length?details.join('<br>'):'No missing cost categories or elevated recurring add-ons detected from the values entered.')+'<br><span style="font-size:11px">A warning indicates incomplete information or a high fee ratio—not a verified deceptive listing.</span>';
+}
+function exportComparison(){
+ if(!entries.length){toast('Add an apartment before exporting.');return}
+ const heading=['Cost item',...entries.map(a=>a.name)];
+ const rows=[
+ ['Advertised rent / mo',a=>money(num(a.rent))],
+ ['Parking / mo',a=>fieldText(a,'parking')],
+ ['Utilities / mo',a=>fieldText(a,'utilities')],
+ ['Internet / mo',a=>fieldText(a,'internet')],
+ ['Other recurring fees / mo',a=>fieldText(a,'fees')],
+ ['Regular monthly cost',a=>money(scenarioCalc(a).recurring)],
+ ['One-time nonrefundable fees',a=>fieldText(a,'once')],
+ ['Concessions',a=>money(num(scenarioCalcInput(a).concession))],
+ ['Lease length',a=>a.months+' months'],
+ ['Effective monthly cost',a=>money(scenarioCalc(a).effective)],
+ ['Total lease cost',a=>money(scenarioCalc(a).total)],
+ ['Upfront cash estimate',a=>money(scenarioCalc(a).upfront)],
+ ['Refundable deposit',a=>fieldText(a,'deposit')]
+ ];
+ const cells=heading.map(t=>'<th>'+safe(t)+'</th>').join('');
+ const table=rows.map(([label,fn])=>'<tr><td>'+safe(label)+'</td>'+entries.map(a=>'<td>'+safe(fn(a))+'</td>').join('')+'</tr>').join('');
+ const names=entries.map(a=>a.name+' — '+money(scenarioCalc(a).effective)+'/month').join('; ');
+ const missing=entries.filter(a=>scenarioCalc(a).missing.length).map(a=>a.name+': '+scenarioCalc(a).missing.join(', ')).join('; ');
+ const page=$('printReport');
+ page.innerHTML='<h1>HiddenCost — Apartment Comparison</h1><p>Generated '+new Date().toLocaleDateString('en-US')+' · '+entries.length+' apartment(s) · US dollars</p><p><strong>Monthly budget:</strong> '+(budgetAmount===null?'Not entered':money(budgetAmount))+' · <strong>What-if scenarios:</strong> '+(Object.keys(scenarioOverrides).length?'Applied (not saved to apartment details)':'None')+'</p><h2>Summary</h2><p>'+safe(names)+'</p><h2>Detailed costs</h2><table><thead><tr>'+cells+'</tr></thead><tbody>'+table+'</tbody></table><h2>Important limitations</h2><p class="report-notes">'+safe((missing?'Unknown cost fields: '+missing+'. ':'')+'Unknown expenses are not assumed to be zero. Amounts are estimates, not verified rental quotes. Refundable deposits are included in upfront cash but excluded from lease expenses. Differences in lease duration may prevent direct comparison of total lease cost. What-if estimates reflect hypothetical inputs.')+'</p>';
+ window.print();
+}
+function scenarioCalcInput(a){return Object.assign({},a,scenarioOverrides[a.id]||{})}
+function fieldText(a,key){const v=scenarioCalcInput(a)[key];return v===null||v===undefined?'Unknown':money(num(v))}
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3100)}function render(){renderScenarioControls();updateDecisionResults()}
 function metricWinner(key,eligible=entries){
  if(!eligible.length)return null;
- const values=eligible.map(a=>({apt:a,value:key==='rent'?num(a.rent):calc(a)[key]}));
+ const values=eligible.map(a=>({apt:a,value:key==='rent'?num(a.rent):scenarioCalc(a)[key]}));
  const low=Math.min(...values.map(x=>x.value));
  return{value:low,apartments:values.filter(x=>Math.abs(x.value-low)<.005).map(x=>x.apt)};
 }
@@ -91,7 +279,7 @@ function renderInsights(){
    $('feeInsight').textContent='Unknown fees will be flagged so you can verify them before deciding.';
    return;
  }
- const complete=entries.every(a=>calc(a).missing.length===0);
+ const complete=entries.every(a=>scenarioCalc(a).missing.length===0);
  const advertised=metricWinner('rent');
  const effective=complete?metricWinner('effective'):null;
  const upfront=complete?metricWinner('upfront'):null;
@@ -106,12 +294,12 @@ function renderInsights(){
    const upName=upfront.apartments.map(a=>safe(a.name)).join(' and ');
    $('takeaway').innerHTML='<strong>Our take:</strong> '+lowName+' '+(effective.apartments.length>1?'tie':'has the lowest')+' estimated effective monthly cost ('+money(effective.value)+'/mo). '+advName+' '+(advertised.apartments.length>1?'tie for':'has')+' the lowest advertised rent, while '+upName+' '+(upfront.apartments.length>1?'tie for':'has')+' the lowest estimated upfront cash requirement. These are separate measures—not a single overall recommendation.';
  }else{
-   const count=entries.filter(a=>calc(a).missing.length).length;
+   const count=entries.filter(a=>scenarioCalc(a).missing.length).length;
    $('takeaway').innerHTML='<strong>Our take:</strong> '+advertised.apartments.map(a=>safe(a.name)).join(' and ')+' '+(advertised.apartments.length>1?'tie for':'has')+' the lowest advertised rent ('+money(advertised.value)+'/mo). <strong>'+count+' of '+entries.length+' apartment'+(entries.length===1?'':'s')+' have missing cost fields.</strong> We cannot confidently identify the cheapest overall option until those costs are verified.';
  }
- const biggest=[...entries].sort((a,b)=>calc(b).extras-calc(a).extras)[0];
- const extra=calc(biggest).extras;
- const unknown=entries.filter(a=>calc(a).missing.length).length;
+ const biggest=[...entries].sort((a,b)=>scenarioCalc(b).extras-scenarioCalc(a).extras)[0];
+ const extra=scenarioCalc(biggest).extras;
+ const unknown=entries.filter(a=>scenarioCalc(a).missing.length).length;
  $('feeInsight').innerHTML='<strong>⚠ Hidden fee spotlight:</strong> '+safe(biggest.name)+' has '+money(extra)+'/month in entered charges above its advertised rent ('+money(extra*num(biggest.months))+' over '+biggest.months+' months).'+(unknown?' Some additional charges may not have been entered.':' This excludes one-time fees and concessions.');
 }
 function renderCompare(){
@@ -120,7 +308,7 @@ function renderCompare(){
    $('compareNote').textContent='Unknown costs are never assumed to be free; enter 0 only when you know a fee is $0.';
    return;
  }
- const fullySpecified=entries.every(a=>calc(a).missing.length===0);
+ const fullySpecified=entries.every(a=>scenarioCalc(a).missing.length===0);
  const sameMonths=new Set(entries.map(a=>a.months)).size===1;
  const minRent=metricWinner('rent').value;
  const minEffective=fullySpecified?metricWinner('effective').value:null;
@@ -132,18 +320,18 @@ function renderCompare(){
   ['Utilities / mo',a=>field(a,'utilities')],
   ['Internet / mo',a=>field(a,'internet')],
   ['Other recurring / mo',a=>field(a,'fees')],
-  ['Regular monthly cost',a=>money(calc(a).recurring)],
+  ['Regular monthly cost',a=>money(scenarioCalc(a).recurring)],
   ['One-time nonrefundable fees',a=>field(a,'once')],
   ['Total concessions',a=>money(num(a.concession))],
   ['Lease term',a=>a.months+' months'],
-  ['Effective monthly cost',a=>money(calc(a).effective),'emph',a=>minEffective!==null&&Math.abs(calc(a).effective-minEffective)<.005],
-  ['Total lease cost',a=>money(calc(a).total),'emph',a=>minTotal!==null&&Math.abs(calc(a).total-minTotal)<.005],
-  ['Upfront cash estimate',a=>money(calc(a).upfront),'',a=>minUpfront!==null&&Math.abs(calc(a).upfront-minUpfront)<.005],
+  ['Effective monthly cost',a=>money(scenarioCalc(a).effective),'emph',a=>minEffective!==null&&Math.abs(scenarioCalc(a).effective-minEffective)<.005],
+  ['Total lease cost',a=>money(scenarioCalc(a).total),'emph',a=>minTotal!==null&&Math.abs(scenarioCalc(a).total-minTotal)<.005],
+  ['Upfront cash estimate',a=>money(scenarioCalc(a).upfront),'',a=>minUpfront!==null&&Math.abs(scenarioCalc(a).upfront-minUpfront)<.005],
   ['Refundable deposit (included upfront)',a=>field(a,'deposit')]
  ];
  $('comparison').innerHTML='<table class="compare-table"><thead><tr><th>Cost item</th>'+entries.map(a=>'<th>'+safe(a.name)+'</th>').join('')+'</tr></thead><tbody>'+
  rows.map(([label,fn,cls,isBest])=>'<tr class="'+(cls||'')+'"><td>'+safe(label)+'</td>'+entries.map(a=>'<td'+(isBest&&isBest(a)?' class="best-cell"':'')+'>'+fn(a)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
- const warnings=entries.filter(a=>calc(a).missing.length).map(a=>a.name+': '+calc(a).missing.map(k=>({parking:'parking',utilities:'utilities',internet:'internet',fees:'other monthly fees',once:'one-time fees',deposit:'deposit'}[k])).join(', '));
+ const warnings=entries.filter(a=>scenarioCalc(a).missing.length).map(a=>a.name+': '+scenarioCalc(a).missing.map(k=>({parking:'parking',utilities:'utilities',internet:'internet',fees:'other monthly fees',once:'one-time fees',deposit:'deposit'}[k])).join(', '));
  $('compareNote').innerHTML=(warnings.length?'<strong>Incomplete estimates:</strong> '+safe(warnings.join(' • '))+'. Unknown amounts are excluded from totals, not verified as zero. ':'All cost fields have values. ')+(!sameMonths?'<strong>Lease lengths differ:</strong> total lease costs are not ranked; effective monthly estimates reflect different durations. ':'')+'Green cells highlight lowest values only when comparable. Actual prices and due dates may differ. Unentered expenses, taxes, insurance, or future price changes are excluded.';
 }
 function field(a,key){return a[key]===null||a[key]===undefined?'<span style="color:#b54734">Unknown</span>':money(num(a[key]))}
@@ -211,8 +399,13 @@ function extractListing(){
    output.insertAdjacentHTML('beforeend','<p class="ok"><strong>Applied.</strong> Check the fields below, then save.</p>');
  };
 }
-function openReplacePicker(){const options=$('replaceOptions');options.innerHTML=entries.map(a=>'<button type="button" class="secondary" style="display:block;width:100%;text-align:left;margin:8px 0;padding:13px 16px" data-replace="'+safe(a.id)+'">'+safe(a.name)+' <span style="color:var(--muted);font-size:12px">· '+money(calc(a).effective)+'/month</span></button>').join('');$('replaceOverlay').classList.add('open');$('closeReplace').focus()}function closeReplacePicker(){$('replaceOverlay').classList.remove('open')}function chooseReplace(id){const a=entries.find(x=>x.id===id);if(!a)return;if(!confirm('Remove '+a.name+' from your shortlist and create a new apartment?'))return;entries=entries.filter(x=>x.id!==id);persist();render();closeReplacePicker();openModal();toast('Apartment removed. Enter the replacement details.')}
-function openModal(id=null){if(!id&&entries.length>=10){openReplacePicker();return}editing=id;const a=id?entries.find(v=>v.id===id):null;$('modalTitle').textContent=a?'Edit apartment':'Add apartment';ids.forEach(k=>{$(k).value=a?(a[k]===null||a[k]===undefined?'':a[k]):(k==='months'?'12':'')});$('firstMonth').checked=a?a.firstMonth!==false:true;$('listingText').value='';$('analyzerResult').hidden=true;$('analyzerResult').innerHTML='';$('overlay').classList.add('open');$('name').focus()}function closeModal(){$('overlay').classList.remove('open');editing=null}function save(e){e.preventDefault();let a={id:editing||('apt-'+Date.now()),firstMonth:$('firstMonth').checked};for(const k of ids)a[k]=k==='name'?$(k).value.trim():val($(k).value);if(!a.name){toast('Enter an apartment name.');return}if(!Number.isInteger(a.months)||a.months<1||a.months>60){toast('Lease term must be 1–60 whole months.');return}if(a.rent===null||a.rent<0||!Number.isFinite(a.rent)){toast('Enter a valid advertised rent.');return}if(ids.slice(3).some(k=>a[k]!==null&&(!Number.isFinite(a[k])||a[k]<0))){toast('All costs must be nonnegative amounts.');return}if(num(a.concession)>calc({...a,concession:0}).recurring*a.months+num(a.once)){toast('Total concession cannot exceed the pre-discount lease cost.');return}if(editing){entries=entries.map(x=>x.id===editing?a:x)}else entries.push(a);persist();render();closeModal();toast(editing?'Apartment updated.':'Apartment saved.')}function loadDemo(){if(entries.length&&!confirm('Replace your current shortlist with the three demo apartments?'))return;entries=demo.map(x=>({...x}));persist();render();toast('Demo apartments loaded.')}function reset(){if(!confirm('Reset the shortlist to demo apartments? This replaces saved entries.'))return;entries=demo.map(x=>({...x}));persist();render();toast('Demo restored.')}
-$('analyzeBtn').onclick=extractListing;$('exampleListingBtn').onclick=()=>{$('listingText').value='1-bedroom apartment available for $1,650/month. Parking $100/month, trash $25/month, amenity fee $40/month, $75 application fee. One month free on a 12-month lease.';extractListing()};$('closeReplace').onclick=closeReplacePicker;$('cancelReplace').onclick=closeReplacePicker;$('replaceOverlay').addEventListener('click',e=>{if(e.target===$('replaceOverlay'))closeReplacePicker()});$('replaceOptions').addEventListener('click',e=>{const b=e.target.closest('button[data-replace]');if(b)chooseReplace(b.dataset.replace)});$('heroAdd').onclick=()=>openModal();$('addBtn').onclick=()=>openModal();$('heroDemo').onclick=loadDemo;$('resetDemo').onclick=reset;$('closeModal').onclick=closeModal;$('cancelBtn').onclick=closeModal;$('aptForm').onsubmit=save;$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeReplacePicker()}});$('cards').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;const {act,id}=b.dataset;if(act==='add')openModal();else if(act==='edit')openModal(id);else if(act==='delete'){let a=entries.find(x=>x.id===id);if(a&&confirm('Remove '+a.name+'?')){entries=entries.filter(x=>x.id!==id);persist();render();toast('Apartment removed.')}}});entries=read()??demo.map(x=>({...x}));render();
+function openReplacePicker(){const options=$('replaceOptions');options.innerHTML=entries.map(a=>'<button type="button" class="secondary" style="display:block;width:100%;text-align:left;margin:8px 0;padding:13px 16px" data-replace="'+safe(a.id)+'">'+safe(a.name)+' <span style="color:var(--muted);font-size:12px">· '+money(calc(a).effective)+'/month</span></button>').join('');$('replaceOverlay').classList.add('open');$('closeReplace').focus()}function closeReplacePicker(){$('replaceOverlay').classList.remove('open')}function chooseReplace(id){const a=entries.find(x=>x.id===id);if(!a)return;if(!confirm('Remove '+a.name+' from your shortlist and create a new apartment?'))return;entries=entries.filter(x=>x.id!==id);delete scenarioOverrides[id];persist();render();closeReplacePicker();openModal();toast('Apartment removed. Enter the replacement details.')}
+function openModal(id=null){if(!id&&entries.length>=10){openReplacePicker();return}editing=id;const a=id?entries.find(v=>v.id===id):null;$('modalTitle').textContent=a?'Edit apartment':'Add apartment';ids.forEach(k=>{$(k).value=a?(a[k]===null||a[k]===undefined?'':a[k]):(k==='months'?'12':'')});$('firstMonth').checked=a?a.firstMonth!==false:true;$('listingText').value='';$('analyzerResult').hidden=true;$('analyzerResult').innerHTML='';$('overlay').classList.add('open');$('name').focus()}function closeModal(){$('overlay').classList.remove('open');editing=null}function save(e){e.preventDefault();let a={id:editing||('apt-'+Date.now()),firstMonth:$('firstMonth').checked};for(const k of ids)a[k]=k==='name'?$(k).value.trim():val($(k).value);if(!a.name){toast('Enter an apartment name.');return}if(!Number.isInteger(a.months)||a.months<1||a.months>60){toast('Lease term must be 1–60 whole months.');return}if(a.rent===null||a.rent<0||!Number.isFinite(a.rent)){toast('Enter a valid advertised rent.');return}if(ids.slice(3).some(k=>a[k]!==null&&(!Number.isFinite(a[k])||a[k]<0))){toast('All costs must be nonnegative amounts.');return}if(num(a.concession)>calc({...a,concession:0}).recurring*a.months+num(a.once)){toast('Total concession cannot exceed the pre-discount lease cost.');return}if(editing){entries=entries.map(x=>x.id===editing?a:x);delete scenarioOverrides[editing]}else entries.push(a);persist();render();closeModal();toast(editing?'Apartment updated.':'Apartment saved.')}function loadDemo(){if(entries.length&&!confirm('Replace your current shortlist with the three demo apartments?'))return;entries=demo.map(x=>({...x}));persist();render();toast('Demo apartments loaded.')}function reset(){if(!confirm('Reset the shortlist to demo apartments? This replaces saved entries.'))return;entries=demo.map(x=>({...x}));persist();render();toast('Demo restored.')}
+$('analyzeBtn').onclick=extractListing;$('exampleListingBtn').onclick=()=>{$('listingText').value='1-bedroom apartment available for $1,650/month. Parking $100/month, trash $25/month, amenity fee $40/month, $75 application fee. One month free on a 12-month lease.';extractListing()};$('closeReplace').onclick=closeReplacePicker;$('cancelReplace').onclick=closeReplacePicker;$('replaceOverlay').addEventListener('click',e=>{if(e.target===$('replaceOverlay'))closeReplacePicker()});$('replaceOptions').addEventListener('click',e=>{const b=e.target.closest('button[data-replace]');if(b)chooseReplace(b.dataset.replace)});$('scenarioApartment').addEventListener('change',e=>{activeScenario=e.target.value;populateScenario();updateDecisionResults()});
+for(const element of Object.keys(scenarioFields))$(element).addEventListener('input',handleScenarioChange);
+$('resetWhatIf').addEventListener('click',()=>{for(const key of Object.keys(scenarioOverrides))delete scenarioOverrides[key];populateScenario();updateDecisionResults();toast('What-if changes reset.')});
+$('monthlyBudget').addEventListener('input',()=>{renderAffordability()});
+$('exportReport').addEventListener('click',exportComparison);
+$('heroAdd').onclick=()=>openModal();$('addBtn').onclick=()=>openModal();$('heroDemo').onclick=loadDemo;$('resetDemo').onclick=reset;$('closeModal').onclick=closeModal;$('cancelBtn').onclick=closeModal;$('aptForm').onsubmit=save;$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeReplacePicker()}});$('cards').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;const {act,id}=b.dataset;if(act==='add')openModal();else if(act==='edit')openModal(id);else if(act==='delete'){let a=entries.find(x=>x.id===id);if(a&&confirm('Remove '+a.name+'?')){entries=entries.filter(x=>x.id!==id);persist();render();toast('Apartment removed.')}}});entries=read()??demo.map(x=>({...x}));render();
 })();
 </script></body></html>
