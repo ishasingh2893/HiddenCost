@@ -1,101 +1,185 @@
-/* HiddenCost educational MVP commute features. User-triggered only. */
+/* HiddenCost commute comparison: user-requested routing; no map and no tracking. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
-const getEntries=()=>typeof window.HiddenCostGetEntries==='function'?window.HiddenCostGetEntries():[];
-const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const currency=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
-let map=null,routeLayer=null,markers=null,busy=false,geoLast=0,routeLast=0;
-const geocache=new Map(),routes=new Map();
+const all=()=>typeof window.HiddenCostGetEntries==='function'?window.HiddenCostGetEntries():[];
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
+const val=n=>n==null?0:Number(n)||0;
+const effective=a=>Math.max(0,(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))*Math.max(1,val(a.months))+val(a.once)-val(a.concession))/Math.max(1,val(a.months));
+const routeData=new Map(),geocodeCache=new Map();
+let requestsAt=0,routeBusy=false,refreshing=false;
 function budget(){
- const raw=$('monthlyBudget')?.value?.trim()||'';
- const val=raw?Number(raw):0;return Number.isFinite(val)&&val>0&&val<1e8?val:null;
+ const text=$('monthlyBudget').value.trim();const amount=Number(text);
+ return text&&Number.isFinite(amount)&&amount>0&&amount<1e8?amount:null;
 }
-function route(a){const r=routes.get(a.id);return r&&r.address===String(a.address||'').trim()&&r.destination===$('destination').value.trim()?r:null}
-function shortest(){
- const completed=getEntries().map(a=>({a,r:route(a)})).filter(x=>x.r).sort((x,y)=>x.r.miles-y.r.miles);
- return completed;
+function route(a){
+ const found=routeData.get(a.id);
+ return found&&found.address===String(a.address||'').trim()&&found.destination===$('destination').value.trim()?found:null;
 }
-function effective(a){const num=v=>Number.isFinite(Number(v))&&v!==null&&v!==undefined?Number(v):0;
- const m=num(a.months)||12;return Math.max(0,(num(a.rent)+num(a.parking)+num(a.utilities)+num(a.internet)+num(a.fees))*m+num(a.once)-num(a.concession))/m;
+function sortedRoutes(){
+ return all().map(a=>({a,r:route(a)})).filter(x=>x.r&&x.r.car).sort((x,y)=>x.r.car.miles-y.r.car.miles);
+}
+function refreshTable(){
+ const table=$('comparison')?.querySelector('table');
+ if(!table)return;
+ table.querySelectorAll('tr[data-commute-row]').forEach(el=>el.remove());
+ const tbody=table.querySelector('tbody');
+ if(!tbody)return;
+ const arr=all(),winners={};
+ for(const mode of ['carDistance','carTime','walkTime']){
+   const amounts=arr.map(a=>route(a)).filter(Boolean).map(r=>mode==='carDistance'?r.car?.miles:mode==='carTime'?r.car?.minutes:r.walk?.minutes).filter(Number.isFinite);
+   winners[mode]=amounts.length===arr.length&&amounts.length>0?Math.min(...amounts):null;
+ }
+ const rows=[
+ ['Driving distance (miles)','carDistance',r=>r.car? r.car.miles.toFixed(1)+' mi':'Unavailable'],
+ ['Driving time (minutes)','carTime',r=>r.car?Math.round(r.car.minutes)+' min':'Unavailable'],
+ ['Walking time (minutes)','walkTime',r=>r.walk?Math.round(r.walk.minutes)+' min':'Unavailable']
+ ];
+ for(const [label,mode,format] of rows){
+   const tr=document.createElement('tr');tr.dataset.commuteRow='true';
+   const name=document.createElement('td');name.textContent=label;tr.appendChild(name);
+   for(const a of arr){
+     const td=document.createElement('td'),r=route(a);
+     const amount=r?(mode==='carDistance'?r.car?.miles:mode==='carTime'?r.car?.minutes:r.walk?.minutes):null;
+     td.textContent=r?format(r):'Not calculated';
+     if(Number.isFinite(amount)&&winners[mode]!==null&&Math.abs(amount-winners[mode])<0.005)td.className='commute-best';
+     tr.appendChild(td);
+   }
+   tbody.appendChild(tr);
+ }
 }
 function refresh(){
- const apartments=getEntries(),sel=$('commuteApartment');if(!sel)return;
- const selected=sel.value;
- sel.innerHTML=apartments.length?apartments.map(a=>'<option value="'+escapeHTML(a.id)+'">'+escapeHTML(a.name)+(a.address?'':' (address needed)')+'</option>').join(''):'<option value="">No apartments</option>';
- sel.value=apartments.find(a=>a.id===selected)?.id||apartments[0]?.id||'';
- const b=budget(),affordable=apartments.filter(a=>effective(a)<=b);
- $('budgetSummary').textContent=b===null?'Optional: enter a maximum effective monthly housing cost.':affordable.length+' of '+apartments.length+' apartments have an estimated cost within '+currency(b)+'/month (unconfirmed charges can change this).';
- const cards=$('cards')?.querySelectorAll('.compact-apt')||[];
- cards.forEach((card,i)=>{
-   const a=apartments[i];if(!a)return;
-   card.classList.remove('within-budget','over-budget');
-   const badge=card.querySelector('.budget-label');if(badge)badge.remove();
-   if(b!==null){
-     const fits=effective(a)<=b;card.classList.add(fits?'within-budget':'over-budget');
-     const tag=document.createElement('span');tag.className='budget-label';tag.textContent=fits?' ✓ In budget':' Over budget';tag.style.cssText='font-size:11px;font-weight:750;color:'+(fits?'#087c70':'#b54734');
-     card.querySelector('.compact-apt-meta')?.appendChild(tag);
-   }
-   const old=card.querySelector('.commute-label');if(old)old.remove();
-   const current=route(a);if(current){
-     const tag=document.createElement('span');tag.className='commute-label';tag.textContent=' · '+current.miles.toFixed(1)+' mi drive';tag.style.cssText='font-size:11px;color:#087f79';
-     card.querySelector('.compact-apt-meta')?.appendChild(tag);
-   }
- });
- const ranked=shortest();
- $('commuteRanking').innerHTML=ranked.length?'<strong>Shortest measured driving commutes:</strong><ol style="margin:5px 0;padding-left:21px">'+ranked.map(x=>'<li>'+escapeHTML(x.a.name)+': <strong>'+x.r.miles.toFixed(1)+' miles</strong> · '+Math.round(x.r.minutes)+' minutes</li>').join('')+'</ol><small>'+ranked.length+' of '+apartments.length+' routes measured. Unmeasured apartments are not ranked.</small>':'No commute routes measured yet. Calculate each apartment separately to build the ranking.';
- $('commuteInsight').innerHTML=ranked.length?'<strong>Shortest measured commute:</strong> '+escapeHTML(ranked[0].a.name)+' · '+ranked[0].r.miles.toFixed(1)+' miles. <small>Only calculated routes included.</small>':'<strong>Commute insight:</strong> Add street addresses and calculate driving routes to compare locations.';
+ if(refreshing)return;refreshing=true;
+ try{
+   const arr=all(),b=budget();
+   $('budgetSummary').textContent=b==null?'Optional: enter a maximum estimated monthly housing cost.':arr.filter(a=>effective(a)<=b).length+' of '+arr.length+' apartments have estimated effective rent within '+usd(b)+'/month (unknown charges may change this).';
+   const cards=$('cards')?.querySelectorAll('.compact-apt')||[];
+   cards.forEach((card,i)=>{
+     const a=arr[i];if(!a)return;
+     card.classList.remove('within-budget','over-budget');
+     card.querySelectorAll('.budget-label,.commute-label').forEach(el=>el.remove());
+     if(b!=null){
+       const good=effective(a)<=b;
+       card.classList.add(good?'within-budget':'over-budget');
+       const tag=document.createElement('span');tag.className='budget-label';tag.textContent=good?' · Within budget':' · Above budget';
+       tag.style.cssText='font-size:11px;font-weight:750;color:'+(good?'#087f79':'#b54734');
+       card.querySelector('.compact-apt-meta')?.appendChild(tag);
+     }
+     const r=route(a);
+     if(r&&r.car){
+       const tag=document.createElement('span');tag.className='commute-label';tag.textContent=' · '+r.car.miles.toFixed(1)+' mi by car';
+       tag.style.cssText='font-size:11px;color:#087f79';
+       card.querySelector('.compact-apt-meta')?.appendChild(tag);
+     }
+   });
+   const ranked=sortedRoutes(),measured=ranked.length;
+   const fastestDrive=ranked.filter(x=>x.r.car).sort((x,y)=>x.r.car.minutes-y.r.car.minutes)[0];
+   const fastestWalk=ranked.filter(x=>x.r.walk).sort((x,y)=>x.r.walk.minutes-y.r.walk.minutes)[0];
+   $('commuteInsight').innerHTML=ranked.length?
+     '<strong>Commute insights:</strong> '+esc(ranked[0].a.name)+' has the shortest measured driving distance ('+ranked[0].r.car.miles.toFixed(1)+' mi). '+
+     (fastestDrive?esc(fastestDrive.a.name)+' has the fastest estimated drive ('+Math.round(fastestDrive.r.car.minutes)+' min). ':'')+
+     (fastestWalk?esc(fastestWalk.a.name)+' has the fastest estimated walk ('+Math.round(fastestWalk.r.walk.minutes)+' min). ':'')+
+     '<small>Compared '+measured+' of '+arr.length+' apartments with current driving routes; missing results are excluded.</small>':
+     '<strong>Commute insights:</strong> Enter a destination and calculate routes to see which apartment is closest.';
+   refreshTable();
+ }finally{refreshing=false}
 }
-function initMap(){
- if(map||!window.L)return;
- map=L.map('commuteMap').setView([39.5,-98.35],4);
- L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:19}).addTo(map);
- markers=L.layerGroup().addTo(map);
-}
-async function throttle(kind){
- const now=Date.now(),old=kind==='geo'?geoLast:routeLast;
- const delay=Math.max(0,1100-(now-old));if(delay)await new Promise(resolve=>setTimeout(resolve,delay));
- if(kind==='geo')geoLast=Date.now();else routeLast=Date.now();
+async function requestPaced(){
+ const d=Math.max(0,1150-(Date.now()-requestsAt));if(d)await new Promise(done=>setTimeout(done,d));
+ requestsAt=Date.now();
 }
 async function geocode(address){
- const key=address.trim().toLowerCase();if(geocache.has(key))return geocache.get(key);
- await throttle('geo');
+ const key=address.trim().toLowerCase();
+ if(geocodeCache.has(key))return geocodeCache.get(key);
+ await requestPaced();
  const res=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+encodeURIComponent(address),{headers:{Accept:'application/json'}});
- if(!res.ok)throw Error('Address lookup unavailable ('+res.status+').');
- const list=await res.json();if(!list.length)throw Error('Address not found. Try the full street address, city and state.');
- const p={lat:Number(list[0].lat),lon:Number(list[0].lon)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))throw Error('Invalid map coordinates.');
- geocache.set(key,p);return p;
+ if(!res.ok)throw Error('Address lookup failed ('+res.status+').');
+ const data=await res.json();
+ if(!data?.length)throw Error('Address not found: '+address+'. Enter a complete street, city and state.');
+ const point={lat:Number(data[0].lat),lon:Number(data[0].lon)};
+ if(!Number.isFinite(point.lat)||!Number.isFinite(point.lon))throw Error('Location returned invalid coordinates.');
+ geocodeCache.set(key,point);return point;
 }
-async function calculate(){
- if(busy)return;const a=getEntries().find(x=>x.id===$('commuteApartment').value),dest=$('destination').value.trim();
- if(!a||!a.address||a.address.trim().length<7){$('commuteStatus').textContent='Edit the apartment and add its full street address before calculating.';return}
- if(dest.length<7){$('commuteStatus').textContent='Enter the full workplace or college street address.';return}
- busy=true;$('calculateCommute').disabled=true;$('commuteStatus').textContent='Locating addresses and calculating a driving route…';
+async function routing(from,to,mode){
+ await requestPaced();
+ // Routing engine is selected by the routed-car / routed-foot server prefix.
+ const url='https://routing.openstreetmap.de/routed-'+mode+'/route/v1/driving/'+from.lon+','+from.lat+';'+to.lon+','+to.lat+'?overview=false';
+ const res=await fetch(url,{headers:{Accept:'application/json'}});
+ if(!res.ok)throw Error(mode+' routing unavailable ('+res.status+').');
+ const data=await res.json();
+ if(data.code!=='Ok'||!data.routes?.length)throw Error('No '+mode+' route found.');
+ const r=data.routes[0];
+ if(!Number.isFinite(r.distance)||!Number.isFinite(r.duration))throw Error('Invalid route measurements.');
+ return{miles:r.distance/1609.344,minutes:r.duration/60};
+}
+async function calculateAll(){
+ if(routeBusy)return;
+ const dest=$('destination').value.trim();
+ if(dest.length<8){$('commuteStatus').textContent='Enter a full workplace or college street address to compare routes.';return}
+ const apartments=all(),valid=apartments.filter(a=>String(a.address||'').trim().length>=8);
+ if(!valid.length){$('commuteStatus').textContent='Add a street address to an apartment using its Edit button first.';return}
+ routeBusy=true;$('calculateCommute').disabled=true;
+ let completed=0,failures=[];
  try{
-   const from=await geocode(a.address),to=await geocode(dest);await throttle('route');
-   const url='https://routing.openstreetmap.de/routed-car/route/v1/driving/'+from.lon+','+from.lat+';'+to.lon+','+to.lat+'?overview=full&geometries=geojson';
-   const response=await fetch(url,{headers:{Accept:'application/json'}});if(!response.ok)throw Error('Routing service unavailable ('+response.status+').');
-   const json=await response.json();if(json.code!=='Ok'||!json.routes?.length)throw Error('No driving route found.');
-   const result=json.routes[0],miles=result.distance/1609.344,minutes=result.duration/60;
-   routes.set(a.id,{address:a.address.trim(),destination:dest,miles,minutes});
-   initMap();if(map){
-     if(routeLayer)map.removeLayer(routeLayer);markers.clearLayers();
-     L.marker([from.lat,from.lon]).addTo(markers).bindPopup(escapeHTML(a.name));
-     L.marker([to.lat,to.lon]).addTo(markers).bindPopup('Workplace / college');
-     routeLayer=L.geoJSON(result.geometry,{style:{color:'#087f79',weight:5}}).addTo(map);
-     map.fitBounds(routeLayer.getBounds().pad(.16));
+   let destination;
+   try{destination=await geocode(dest)}catch(e){$('commuteStatus').textContent='Destination lookup failed: '+e.message;return}
+   for(const a of valid){
+     $('commuteStatus').textContent='Calculating routes '+(completed+1)+' of '+valid.length+' — '+a.name+'…';
+     try{
+       const from=await geocode(a.address);
+       let car=null,walk=null;
+       try{car=await routing(from,destination,'car')}catch(e){failures.push(a.name+' (drive: '+e.message+')')}
+       try{walk=await routing(from,destination,'foot')}catch(e){failures.push(a.name+' (walk: '+e.message+')')}
+       if(car||walk)routeData.set(a.id,{address:a.address.trim(),destination:dest,car,walk});
+     }catch(e){failures.push(a.name+': '+e.message)}
+     completed++;refresh();
    }
-   $('commuteStatus').textContent=a.name+': '+miles.toFixed(1)+' miles · about '+Math.round(minutes)+' minutes by car without traffic.';
-   refresh();
- }catch(e){$('commuteStatus').textContent='Could not calculate commute: '+e.message+'. Rental comparison is still available.'}
- finally{busy=false;$('calculateCommute').disabled=false;}
+   const good=all().filter(a=>route(a)).length;
+   $('commuteStatus').textContent='Calculated at least one travel mode for '+good+' of '+apartments.length+' apartments.'+(failures.length?' Some routes were unavailable: '+failures.slice(0,3).join('; ')+'.':'')+(valid.length<apartments.length?' Add street addresses to the remaining apartments to include them.':'');
+ }finally{routeBusy=false;$('calculateCommute').disabled=false;refresh()}
 }
-function setup(){
- if(!$('commuteApartment'))return;
- try{$('monthlyBudget').value=localStorage.getItem('hiddencost-budget')||'';$('destination').value=localStorage.getItem('hiddencost-destination')||''}catch{}
+function sortList(){
+ const mode=$('commuteSort').value;
+ const data=all().slice();
+ function metric(a){
+   if(mode==='cost')return effective(a);
+   const r=route(a);
+   if(mode==='driveDistance')return r?.car?.miles??Number.POSITIVE_INFINITY;
+   if(mode==='driveTime')return r?.car?.minutes??Number.POSITIVE_INFINITY;
+   return r?.walk?.minutes??Number.POSITIVE_INFINITY;
+ }
+ data.sort((a,b)=>metric(a)-metric(b)||String(a.name).localeCompare(String(b.name)));
+ if(window.HiddenCostSortEntries)window.HiddenCostSortEntries(data.map(a=>a.id));
+ refresh();
+}
+function printReport(){
+ const arr=all();if(!arr.length){alert('Add an apartment before exporting.');return}
+ const b=budget(),dest=$('destination').value.trim();
+ const labels=[
+ ['Advertised monthly rent',a=>usd(val(a.rent))],
+ ['Regular monthly housing cost',a=>usd(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))],
+ ['Effective monthly rent',a=>usd(effective(a))],
+ ['Lease term',a=>a.months+' months'],
+ ['Total lease cost',a=>usd(effective(a)*Math.max(1,val(a.months)))],
+ ['Upfront cash',a=>usd(val(a.once)+val(a.deposit)+(a.firstMonth?val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees):0))],
+ ['Driving distance',a=>route(a)?.car?route(a).car.miles.toFixed(1)+' miles':'Not calculated'],
+ ['Driving time',a=>route(a)?.car?Math.round(route(a).car.minutes)+' min':'Not calculated'],
+ ['Walking time',a=>route(a)?.walk?Math.round(route(a).walk.minutes)+' min':'Not calculated']
+ ];
+ const headers='<th>Metric</th>'+arr.map(a=>'<th>'+esc(a.name)+'</th>').join('');
+ const rows=labels.map(([label,fn])=>'<tr><td>'+esc(label)+'</td>'+arr.map(a=>'<td>'+esc(fn(a))+'</td>').join('')+'</tr>').join('');
+ $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
+ window.print();
+}
+function init(){
+ const dest=$('destination');if(!dest)return;
+ try{dest.value=localStorage.getItem('hiddencost-destination')||'';$('monthlyBudget').value=localStorage.getItem('hiddencost-budget')||''}catch{}
+ $('calculateCommute').addEventListener('click',calculateAll);
+ $('commuteSort').addEventListener('change',sortList);
+ dest.addEventListener('change',()=>{try{localStorage.setItem('hiddencost-destination',dest.value.trim())}catch{}refresh()});
  $('monthlyBudget').addEventListener('input',()=>{try{localStorage.setItem('hiddencost-budget',$('monthlyBudget').value)}catch{}refresh()});
- $('destination').addEventListener('change',()=>{try{localStorage.setItem('hiddencost-destination',$('destination').value.trim())}catch{}refresh()});
- $('calculateCommute').addEventListener('click',calculate);
- window.HiddenCostExtraRefresh=refresh;initMap();refresh();
+ $('exportReport').onclick=printReport;
+ window.HiddenCostExtraRefresh=refresh;refresh();
 }
-setup();
+init();
 })();
