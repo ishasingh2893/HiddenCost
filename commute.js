@@ -7,7 +7,7 @@ const usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maxi
 const val=n=>n==null?0:Number(n)||0;
 const effective=a=>Math.max(0,(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))*Math.max(1,val(a.months))+val(a.once)-val(a.concession))/Math.max(1,val(a.months));
 const routeData=new Map(),geocodeCache=new Map();
-let requestsAt=0,routeBusy=false,refreshing=false;
+let requestsAt=0,routeBusy=false,refreshing=false;let filters={budget:false,complete:false,commute:false};
 function budget(){
  const text=$('monthlyBudget').value.trim();const amount=Number(text);
  return text&&Number.isFinite(amount)&&amount>0&&amount<1e8?amount:null;
@@ -18,6 +18,56 @@ function route(a){
 }
 function sortedRoutes(){
  return all().map(a=>({a,r:route(a)})).filter(x=>x.r&&x.r.car).sort((x,y)=>x.r.car.miles-y.r.car.miles);
+}
+
+function visibleApts(){
+ const b=budget();
+ return all().filter(a=>{
+   if(filters.budget&&(b===null||effective(a)>b))return false;
+   if(filters.complete&&['parking','utilities','internet','fees','once','deposit'].some(k=>a[k]===null||a[k]===undefined))return false;
+   if(filters.commute&&!route(a)?.car)return false;
+   return true;
+ });
+}
+function renderFilteredView(){
+ const selected=new Set(visibleApts().map(a=>a.id)),arr=all();
+ const count=selected.size;
+ $('filterCount').textContent='Showing '+count+' of '+arr.length+' apartments';
+ $('clearFilters').hidden=!Object.values(filters).some(Boolean);
+ const cards=$('cards');
+ if(cards){
+   cards.querySelectorAll('.compact-apt').forEach((el,i)=>{if(arr[i])el.hidden=!selected.has(arr[i].id)});
+   let empty=cards.querySelector('#filterEmpty');
+   if(empty)empty.remove();
+   if(count===0&&arr.length){
+     empty=document.createElement('div');empty.id='filterEmpty';empty.className='filter-no-match';
+     empty.textContent='No apartments match these filters. Try clearing a filter or updating the apartment information.';
+     cards.prepend(empty);
+   }
+ }
+ const table=$('comparison')?.querySelector('table');
+ if(table){
+   const shown=arr.map(a=>selected.has(a.id));
+   table.querySelectorAll('tr').forEach(row=>{
+     Array.from(row.children).forEach((cell,i)=>{if(i>0)cell.hidden=!shown[i-1]});
+   });
+   const header=table.querySelector('thead tr');
+   if(header){let note=$('filterTableNote');note?.remove();if(count===0){note=document.createElement('p');note.id='filterTableNote';note.className='subtle';note.textContent='No matching apartments — clear filters to see the comparison.';table.before(note)}}
+ }
+}
+function setFilters(){
+ if($('filterBudget').checked&&budget()===null){
+   $('filterBudget').checked=false;
+   $('filterCount').textContent='Enter a monthly housing budget before filtering by budget.';
+   return;
+ }
+ filters={budget:$('filterBudget').checked,complete:$('filterComplete').checked,commute:$('filterCommute').checked};
+ renderFilteredView();
+}
+function clearFilters(){
+ filters={budget:false,complete:false,commute:false};
+ ['filterBudget','filterComplete','filterCommute'].forEach(id=>$(id).checked=false);
+ renderFilteredView();
 }
 function refreshTable(){
  const table=$('comparison')?.querySelector('table');
@@ -81,7 +131,7 @@ function refresh(){
      (fastestWalk?esc(fastestWalk.a.name)+' has the fastest estimated walk ('+Math.round(fastestWalk.r.walk.minutes)+' min). ':'')+
      '<small>Compared '+measured+' of '+arr.length+' apartments with current driving routes; missing results are excluded.</small>':
      '<strong>Commute insights:</strong> Enter a destination and calculate routes to see which apartment is closest.';
-   refreshTable();
+   refreshTable();renderFilteredView();
  }finally{refreshing=false}
 }
 async function requestPaced(){
@@ -179,6 +229,10 @@ function init(){
  dest.addEventListener('change',()=>{try{localStorage.setItem('hiddencost-destination',dest.value.trim())}catch{}refresh()});
  $('monthlyBudget').addEventListener('input',()=>{try{localStorage.setItem('hiddencost-budget',$('monthlyBudget').value)}catch{}refresh()});
  $('exportReport').onclick=printReport;
+ $('filterToggle').addEventListener('click',()=>{const panel=$('filterPanel');panel.hidden=!panel.hidden;$('filterToggle').setAttribute('aria-expanded',String(!panel.hidden))});
+ $('applyFilters').addEventListener('click',setFilters);
+ $('resetFilters').addEventListener('click',clearFilters);
+ $('clearFilters').addEventListener('click',clearFilters);
  window.HiddenCostExtraRefresh=refresh;refresh();
 }
 init();
