@@ -103,6 +103,26 @@ function refresh(){
  try{
    const arr=all(),b=budget();
    $('budgetSummary').textContent=b==null?'Optional: enter a maximum estimated monthly housing cost.':arr.filter(a=>effective(a)<=b).length+' of '+arr.length+' apartments have estimated effective rent within '+usd(b)+'/month (unknown charges may change this).';
+   // Show affordability in the main comparison itself, without excluding properties.
+   const table=$('comparison')?.querySelector('table');
+   if(table){
+     const heads=Array.from(table.querySelectorAll('thead th')).slice(1);
+     heads.forEach((head,i)=>{
+       const apartment=arr[i];if(!apartment)return;
+       head.classList.remove('budget-head-ok','budget-head-over');
+       head.querySelector('.budget-table-label')?.remove();
+       if(b!==null){
+         const within=effective(apartment)<=b;
+         head.classList.add(within?'budget-head-ok':'budget-head-over');
+         const tag=document.createElement('span');
+         tag.className='budget-table-label';
+         const uncertain=['parking','utilities','internet','fees','once'].some(k=>apartment[k]===null||apartment[k]===undefined);
+         tag.textContent=(within?'✓ Within budget':'⚠ Above budget')+(uncertain?' · provisional':'');
+         const wrapper=head.querySelector('.apt-table-head')||head;
+         wrapper.appendChild(tag);
+       }
+     });
+   }
    const cards=$('cards')?.querySelectorAll('.compact-apt')||[];
    cards.forEach((card,i)=>{
      const a=arr[i];if(!a)return;
