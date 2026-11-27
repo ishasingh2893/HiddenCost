@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: HiddenCost Python web app
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 512
+
+Resources:
+  HiddenCostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.handler
+      CodeUri: .
+      Environment:
+        Variables:
+          HIDDENCOST_DB: /tmp/hiddencost.db
+          HIDDENCOST_SECRET: development-only-change-me
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: ANY
+            ApiId: !Ref HiddenCostApi
+        Proxy:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            ApiId: !Ref HiddenCostApi
+
+  HiddenCostApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        AllowHeaders:
+          - content-type
+
+Outputs:
+  HiddenCostUrl:
+    Description: Public HiddenCost URL
+    Value: !Sub 'https://${HiddenCostApi}.execute-api.${AWS::Region}.amazonaws.com/'

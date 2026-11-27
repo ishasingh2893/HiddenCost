@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#14211b"/><title>HiddenCost — See beyond the rent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14243b;--muted:#65758b;--bg:#f4f7fb;--card:#fff;--line:#e3e9f1;--navy:#101c2e;--teal:#087f79;--aqua:#e3f7f3;--gold:#f1b94c;--red:#b54734;--redbg:#fff0eb;--shadow:0 10px 35px rgba(18,36,58,.075)}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7cdbd2;outline-offset:2px}.shell{max-width:1200px;margin:auto;padding:0 24px}.top{background:var(--navy);color:#fff}.nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}.logo{font-weight:800;letter-spacing:-.06em;font-size:25px}.logo span{color:#65d7c7}.nav-right{font-size:13px;color:#b6c4d3}.hero{padding:42px 0 52px;display:block;max-width:850px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:#75dcca;text-transform:uppercase}.hero h1{font-size:clamp(33px,5vw,58px);line-height:1.09;letter-spacing:-.055em;margin:15px 0}.hero h1 em{color:#79dfcf;font-style:normal}.hero p{color:#c9d4df;max-width:565px;line-height:1.65;margin:0 0 27px}.cta,.primary{background:var(--teal);border:0;color:white;border-radius:10px;padding:13px 19px;font-weight:700}.cta{background:#65d7c7;color:#0d2433}.ghost{background:transparent;border:1px solid #b6c4d3;color:#fff;border-radius:10px;padding:12px 18px;font-weight:650;margin-left:9px}.hero-card{border:1px solid #33475f;padding:24px;background:#1b2e44;border-radius:20px;box-shadow:0 18px 40px #0002}.hero-card .label{color:#aac0d0;font-size:13px}.hero-card .big{font-size:43px;letter-spacing:-.06em;font-weight:800;margin:7px 0}.hero-card .break{color:#79dfcf;font-size:13px;font-weight:650}.hero-card hr{border:0;border-top:1px solid #35495d;margin:21px 0}.minirow{display:flex;justify-content:space-between;font-size:14px;color:#d4e2ea;margin:11px 0}.minirow strong{color:#fff}.content{margin-top:0;position:relative;padding-top:30px;padding-bottom:65px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 19px}.toolbar h2{letter-spacing:-.035em;font-size:26px;margin:0}.subtle{color:var(--muted);font-size:14px;margin-top:6px}.actions{display:flex;gap:9px;flex-wrap:wrap}.secondary{background:#fff;border:1px solid #d3dee9;color:var(--ink);border-radius:10px;padding:12px 15px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.apt{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:23px;display:flex;flex-direction:column;min-height:355px;position:relative}.apt.winner{border:2px solid #1d9a89;padding:22px}.badge{display:inline-block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border-radius:99px;padding:6px 9px;background:#e7f6f1;color:#087669;font-weight:800}.apt-head{display:flex;justify-content:space-between;align-items:start;gap:6px}.apt h3{font-size:19px;letter-spacing:-.03em;margin:10px 0 4px;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted)}.apt .cost{font-size:34px;font-weight:800;letter-spacing:-.06em;margin:24px 0 2px}.apt .per{font-size:12px;color:var(--muted)}.delta{margin-top:15px;padding:10px 12px;border-radius:9px;background:#f2f6fa;font-size:13px;color:#41546b}.delta strong{color:#17425b}.apt .foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:auto;padding-top:16px;gap:8px}.foot .small{font-size:12px;color:var(--muted)}.link{border:0;background:none;color:#087f79;font-weight:750;padding:8px}.danger{color:#a43e39}.empty{border:2px dashed #cbd8e5;border-radius:16px;padding:26px;color:var(--muted);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:355px}.empty strong{font-size:18px;color:var(--ink);margin-bottom:7px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:26px;margin-top:22px}.panel h2{font-size:23px;margin:0 0 6px;letter-spacing:-.04em}.comparison{overflow-x:auto}.compare-table{border-collapse:collapse;width:100%;min-width:600px;font-size:14px;margin-top:20px}.compare-table th{text-align:right;color:var(--ink);padding:14px;border-bottom:1px solid var(--line);min-width:130px}.compare-table th:first-child,.compare-table td:first-child{text-align:left;color:var(--muted)}.compare-table td{text-align:right;padding:14px;border-bottom:1px solid #ebeff5}.compare-table tr.emph{background:#e8f8f4;font-weight:800}.compare-table tr:last-child td{border-bottom:0}.note{border-radius:10px;background:#fff7e8;color:#755320;padding:13px 15px;font-size:13px;margin-top:17px;line-height:1.55}.method{color:var(--muted);line-height:1.6;font-size:13px;margin-top:14px}.footer{text-align:center;color:#77869a;font-size:12px;padding:25px}.overlay{position:fixed;inset:0;background:#0a1827c2;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.overlay.open{display:flex}.modal{width:min(760px,100%);max-height:94vh;overflow:auto;background:white;border-radius:17px;box-shadow:0 25px 80px #0004}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;padding:23px 25px 16px;border-bottom:1px solid var(--line)}.modal-head h2{margin:0;letter-spacing:-.035em}.modal-head p{font-size:13px;color:var(--muted);margin:6px 0 0}.close{border:0;background:#f0f4f8;border-radius:8px;width:35px;height:35px;font-size:22px}.modal-body{padding:22px 25px}.section-title{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#547086;margin:8px 0 14px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:6px;color:#394e64}.field input,.field select{width:100%;padding:12px;border:1px solid #d6e0ea;border-radius:9px;background:#fff;color:var(--ink)}.hint{color:#7b8c9d;font-size:11px;margin-top:4px}.line-sep{border:0;border-top:1px solid var(--line);margin:22px 0}.checkline{display:flex;align-items:center;gap:10px;font-size:13px;color:#48586c;margin:14px 0}.checkline input{width:17px;height:17px;accent-color:#08867d}.modal-actions{display:flex;justify-content:flex-end;gap:9px;padding:16px 25px;border-top:1px solid var(--line);position:sticky;bottom:0;background:white}.toast{position:fixed;bottom:22px;right:22px;z-index:20;background:#14243b;color:#fff;padding:13px 17px;border-radius:10px;box-shadow:var(--shadow);display:none;font-size:13px}.chart{display:flex;align-items:flex-end;gap:16px;height:160px;margin-top:24px;border-bottom:1px solid #e1e8f0;padding:0 12px}.barwrap{flex:1;display:flex;gap:6px;align-items:flex-end;justify-content:center;height:100%;position:relative}.bar{width:32px;border-radius:5px 5px 0 0;background:#aabaca;min-height:2px}.bar.real{background:#159487}.barlabel{font-size:11px;color:var(--muted);text-align:center;margin:9px 0 0;flex:1;overflow-wrap:anywhere}.legend{display:flex;gap:18px;margin-top:17px;color:var(--muted);font-size:12px}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;background:#aabaca;margin-right:5px}.dot.real{background:#159487}.desc{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}@media(max-width:800px){.hero{grid-template-columns:1fr;padding:25px 0 53px}.hero-card{display:none}.grid{grid-template-columns:1fr}.apt,.empty{min-height:300px}.toolbar{align-items:flex-start;flex-direction:column}.nav-right{display:none}}@media(max-width:500px){.shell{padding:0 15px}.fields{grid-template-columns:1fr}.modal-head,.modal-body{padding-left:16px;padding-right:16px}.modal-actions{padding:14px 16px}.hero h1{font-size:37px}.ghost{margin-left:0;margin-top:9px}.actions{width:100%}.actions button{flex:1}.apt{min-height:280px}}
+
+/* Listing extraction: local, explainable and editable */
+.analyzer{background:#f0f8f8;border:1px solid #c5e8e3;border-radius:12px;padding:17px;margin-bottom:22px}
+.analyzer h3{font-size:16px;margin:0 0 5px;letter-spacing:-.02em}
+.analyzer p{font-size:12px;line-height:1.55;color:#4e6875;margin:0 0 12px}
+.analyzer textarea{width:100%;min-height:115px;resize:vertical;background:#fff;border:1px solid #bcd5d5;border-radius:9px;padding:12px;font:inherit;font-size:13px;line-height:1.5;color:var(--ink)}
+.analyzer textarea:focus-visible{outline:3px solid #7cdbd2}
+.analyzer .an-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
+.analyzer .an-small{font-size:11px;color:#527175}
+.an-result{margin-top:13px;font-size:12px;line-height:1.6}
+.an-result[hidden]{display:none}
+.an-result ul{padding-left:19px;margin:7px 0}
+.an-result li{margin:4px 0}
+.an-result .warn{background:#fff8e9;color:#795a29;padding:9px;border-radius:7px}
+.an-result .ok{color:#08796f}
+
+/* Decision-first comparison replaces the tall chart. */
+.insight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.insight-card{border:1px solid #dce7ed;background:#f8fbfc;border-radius:13px;padding:17px;min-width:0}
+.insight-card.featured{background:#e9f8f4;border-color:#8ed1c4}
+.insight-kicker{color:#517083;text-transform:uppercase;letter-spacing:.075em;font-weight:800;font-size:11px}
+.insight-name{font-size:18px;font-weight:800;letter-spacing:-.025em;margin:10px 0 5px;overflow-wrap:anywhere}
+.insight-value{font-size:23px;font-weight:800;color:#087f79;letter-spacing:-.04em}
+.insight-context{font-size:12px;color:#66778a;margin-top:6px;line-height:1.4}
+.takeaway{border-left:4px solid #0c9384;padding:13px 16px;margin-top:17px;background:#f0f9f7;border-radius:0 10px 10px 0;font-size:14px;line-height:1.6}
+.fee-insight{padding:12px 15px;border-radius:10px;background:#fff7e8;color:#755320;margin-top:12px;font-size:13px;line-height:1.6}
+.compare-table td.best-cell{background:#dff6ed;color:#086f60;font-weight:800;box-shadow:inset 0 0 0 1px #b6e5d4}
+@media(max-width:800px){.insight-grid{grid-template-columns:1fr}}
+
+/* Compact shortlist: decision insights are now the first content, and no tall apartment cards. */
+.shortlist-panel .toolbar{margin-bottom:15px}
+.compact-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.compact-apt{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f9fbfe;border:1px solid #e2e9f1;border-radius:12px;padding:13px 15px;min-height:88px}
+.compact-main{flex:1 1 150px;min-width:0}
+.compact-apt-name{font-size:15px;font-weight:800;overflow-wrap:anywhere}
+.compact-apt-meta{font-size:11px;color:#65758b;margin-top:5px}
+.compact-prices{display:flex;flex-direction:column;align-items:flex-end;flex:0 0 auto}
+.compact-prices strong{font-size:18px;letter-spacing:-.04em}
+.compact-prices span{color:#65758b;font-size:10px}
+.compact-tools{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex:1 1 100%;border-top:1px solid #e7edf3;padding-top:7px}
+.compact-tools .link{padding:3px 6px;font-size:12px}
+.complete-label,.incomplete-label{margin-right:auto;font-size:11px;color:#267f70}
+.incomplete-label{color:#b16a25}
+.compact-add{border:1px dashed #a9c7d3;background:#f7fbfe;color:#146b73;border-radius:12px;min-height:88px;font-weight:800;font-size:14px}
+.compact-add span{font-size:11px;color:#65808d;font-weight:500}
+.compact-add:hover{background:#e8f7f4}
+@media(max-width:800px){.compact-list{grid-template-columns:1fr}}
+
+/* Decision tools */
+.decision-tools{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.toolbox{background:#f7fafc;border:1px solid #e1e9ef;border-radius:13px;padding:19px;min-width:0}
+.toolbox h3{font-size:17px;margin:0 0 6px;letter-spacing:-.02em}
+.toolbox p{margin:0 0 14px;font-size:12px;color:#62778b;line-height:1.55}
+.tool-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tool-field label{display:block;font-size:12px;font-weight:750;color:#395369;margin-bottom:5px}
+.tool-field input,.tool-field select{width:100%;border-radius:9px;border:1px solid #ccdae6;background:white;padding:10px 11px;color:#14243b;min-width:0}
+.tool-field.wide{grid-column:1/-1}
+.tool-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.tool-result{margin-top:15px;background:#eaf7f4;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.65}
+.tool-result.warning{background:#fff7e8;color:#785325}
+.tool-result strong{color:#08796c}
+.tool-note{color:#62778b;font-size:11px;line-height:1.45;margin-top:10px}
+.tool-pill{display:inline-block;padding:4px 7px;background:#e6f5f1;color:#087c70;border-radius:7px;font-weight:750;font-size:11px}
+.afford-table{margin-top:12px;display:grid;gap:8px}
+.afford-row{border:1px solid #dbe8ed;border-radius:9px;padding:10px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.afford-row .info{min-width:0;font-size:13px}.afford-row .info strong{display:block;overflow-wrap:anywhere}.afford-row .info span{font-size:11px;color:#64768a}
+.afford-status{font-size:12px;font-weight:800;text-align:right;white-space:nowrap}.afford-status.over{color:#b54734}.afford-status.under{color:#087f79}
+.export-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.highlight-warning{padding:12px 14px;background:#fff7e8;border-radius:9px;color:#805c26;font-size:12px;line-height:1.65;margin-top:13px}
+@media(max-width:850px){.decision-tools{grid-template-columns:1fr}}
+@media(max-width:480px){.tool-fields{grid-template-columns:1fr}.tool-field.wide{grid-column:auto}}
+@media print {
+ body{background:white!important;color:#14243b!important;font-size:11pt}
+ header,.shortlist-panel,#insightsPanel,#feeDetectionPanel,#comparisonPanel,.footer,.overlay,.toast,.method{display:none!important}
+ #printReport{display:block!important;position:static!important;background:white!important;padding:0!important}
+ #printReport h1{font-size:23pt;color:#14243b;margin:0 0 8px}
+ #printReport h2{font-size:14pt;margin:23px 0 10px}
+ #printReport p{font-size:10pt;line-height:1.45}
+ #printReport table{width:100%;border-collapse:collapse;font-size:9pt}
+ #printReport th,#printReport td{padding:8px;text-align:right;border:1px solid #c9d7df}
+ #printReport th:first-child,#printReport td:first-child{text-align:left}
+ #printReport .report-notes{font-size:9pt;color:#444;white-space:pre-wrap}
+ @page{size:landscape;margin:13mm}
+}
+#printReport{display:none}
+.budgetbar{background:#fff;border:1px solid #dce8ef;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;font-size:13px}.budgetbar input{padding:10px;width:140px;border:1px solid #cadae5;border-radius:8px}.budgetbar span{flex:1 1 180px;font-size:12px;color:#667a8a}.commute-form{display:grid;grid-template-columns:1.5fr 1fr auto;align-items:end;gap:12px;margin:17px 0}.commute-form input,.commute-form select{width:100%;border:1px solid #cadae5;border-radius:8px;padding:12px;min-width:0}.commute-map{height:310px;border:1px solid #dce8ee;border-radius:11px;overflow:hidden;background:#e9f1f6}.commute-status{background:#eef5f9;border-radius:8px;margin:10px 0;padding:12px;font-size:13px;color:#48657a}.commute-ranking{margin-top:12px;line-height:1.65;font-size:13px}.within-budget{border-left:4px solid #148e80}.over-budget{border-left:4px solid #ba5e49}@media(max-width:800px){.commute-form{grid-template-columns:1fr}.commute-map{height:240px}}
+
+.commute-inline{background:#fff;border:1px solid #dce8ef;border-radius:14px;padding:18px 20px;margin-bottom:18px}
+.commute-inline-top{display:grid;grid-template-columns:.75fr 1.25fr;gap:20px;align-items:center}
+.commute-inline h2{font-size:20px;letter-spacing:-.035em;margin:0 0 5px}
+.commute-controls{display:flex;gap:9px;min-width:0}
+.commute-controls input{border:1px solid #cbdce7;border-radius:9px;padding:11px 13px;flex:1;min-width:0}
+.commute-inline-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:11px;font-size:12px;color:#4e687a;flex-wrap:wrap}
+.commute-inline-bottom label{white-space:nowrap}
+.commute-inline-bottom select{font:inherit;border:1px solid #d1dee9;border-radius:8px;background:#fff;padding:8px;color:#14243b}
+.commute-fineprint{font-size:11px;color:#758699;line-height:1.5;margin-top:9px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.compare-table td.commute-best{background:#e3f6ee;color:#087f79;font-weight:800}
+@media(max-width:800px){.commute-inline-top{grid-template-columns:1fr}.commute-controls{flex-wrap:wrap}.commute-controls input{flex-basis:100%}.commute-inline-bottom label{white-space:normal}}
+
+.filter-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 14px}
+.filter-toolbar .subtle{margin:0}
+.filter-panel[hidden],#clearFilters[hidden]{display:none!important}
+.filter-panel{background:#f6fafc;border:1px solid #d8e5ec;border-radius:12px;padding:15px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+.filter-choice{display:flex;align-items:center;gap:7px;font-size:13px;min-height:40px;font-weight:600}
+.filter-choice input{width:17px;height:17px;accent-color:#087f79}
+.filter-help{flex:1 0 100%;font-size:11px;color:#687f90;line-height:1.6;margin:0}
+.filter-no-match{padding:20px;border-radius:12px;border:1px dashed #c7d6e1;color:#62768b;font-size:13px;text-align:center;grid-column:1/-1}
+@media(max-width:650px){.filter-panel{display:grid;grid-template-columns:1fr 1fr}.filter-choice{grid-column:1/-1}.filter-help{grid-column:1/-1}}
+.compact-apt[hidden],.compare-table th[hidden],.compare-table td[hidden]{display:none!important}
+
+#cards[hidden],#feeDetection[hidden]{display:none!important}
+.apt-table-head{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:130px}
+.apt-table-head strong{font-size:14px;overflow-wrap:anywhere}
+.apt-table-head span{font-size:11px;color:var(--muted);font-weight:400}
+.apt-table-actions{display:flex;gap:4px}
+.apt-table-actions button{font-size:12px;padding:6px}
+.compare-table th{vertical-align:top}
+@media(max-width:800px){.hero{max-width:100%;padding:27px 0 37px}}
+.compare-table th.budget-head-over{background:#fff0eb;box-shadow:inset 0 3px #b54734}
+.compare-table th.budget-head-ok{background:#f0faf5;box-shadow:inset 0 3px #087f79}
+.budget-table-label{font-size:11px;font-weight:800;color:#8d4538;line-height:1.3;max-width:155px;text-align:right}
+.budget-head-ok .budget-table-label{color:#087f79}
+</style><link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}"></head><body>
+<header class="top"><div class="shell"><nav class="nav"><div class="logo">hidden<span>cost.</span></div><div class="nav-right">Be Fast AND Smart!</div></nav><div class="hero"><div><div class="eyebrow">Rental Comparison, Minus Surprises!</div><h1>The rent you see isn't always <em>the rent you pay.</em></h1><p>Compare up to <strong>10 apartments</strong> using recurring fees, one-time costs, deposits, commute distances and rent specials—not just the number in the listing.</p><button class="cta" id="heroAdd">+ Add an apartment</button> <button class="ghost" id="heroDemo">Load demo apartments</button></div></div></div></header>
+<main class="shell content"><div class="budgetbar"><label for="monthlyBudget"><strong>Monthly housing budget ($)</strong></label><input id="monthlyBudget" type="number" min="1" placeholder="e.g. 1900" inputmode="decimal"><span id="budgetSummary">Optional — over-budget apartments remain visible, flagged unless filtered out.</span><button id="exportReport" class="secondary" type="button">↓ Export comparison PDF</button></div>
+<section class="commute-inline" aria-labelledby="commuteHeading"><div class="commute-inline-top"><div><h2 id="commuteHeading">Where do you commute?</h2><div class="subtle">Enter one office or college address to compare all apartments.</div></div><div class="commute-controls"><label for="destination" class="sr-only">Workplace or college street address</label><input id="destination" maxlength="200" placeholder="Workplace or college street address, city, state" autocomplete="street-address"/><button type="button" class="primary" id="calculateCommute">Calculate all commutes</button></div></div><div class="commute-inline-bottom"><div id="commuteStatus" role="status">Add apartment street addresses to calculate driving and walking routes.</div><label for="commuteSort">Sort apartments by <select id="commuteSort"><option value="driveDistance">Driving distance (shortest)</option><option value="driveTime">Driving time (fastest)</option><option value="walkTime">Walking time (fastest)</option><option value="cost">Effective rent (lowest)</option></select></label></div><div class="commute-fineprint">Route results are approximate, without live traffic. Only apartments with street addresses can be routed. Uses OpenStreetMap geocoding and demo driving/walking routing services when you click Calculate; services can be unavailable.</div></section>
+<section class="panel" id="insightsPanel" style="margin-top:0"><h2>HiddenCost Insights</h2><div class="subtle">Overall conclusions across all saved apartments. Filtering the shortlist does not change these insights.</div><div id="insights"></div><div id="takeaway" class="takeaway"></div><div id="feeInsight" class="fee-insight"></div><div id="commuteInsight" class="takeaway" aria-live="polite" style="margin-top:11px"></div></section>
+<div id="feeDetection" hidden aria-hidden="true"></div>
+<!-- Internal compatibility controls for the original calculation engine. No what-if/affordability panels are shown. -->
+<div hidden aria-hidden="true"><select id="scenarioApartment"></select><input id="whatParking"><input id="whatUtilities"><input id="whatInternet"><input id="whatFees"><input id="whatOnce"><input id="whatConcession"><button id="resetWhatIf" type="button"></button><span id="scenarioCount"></span><div id="scenarioResult"></div><div id="affordResult"></div></div>
+<section class="panel" id="comparisonPanel"><div class="toolbar"><div><h2>Compare apartments</h2><div class="subtle">Compare up to 10 properties. Edit or remove them directly in the table.</div></div><div class="actions"><button class="secondary" id="resetDemo">↻ Reset demo</button><button class="primary" id="addBtn">+ Add apartment</button></div></div><div class="filter-toolbar"><button id="filterToggle" type="button" class="secondary" aria-expanded="false" aria-controls="filterPanel">⚲ Filter apartments</button><span id="filterCount" class="subtle">Showing all apartments</span><button id="clearFilters" type="button" class="link" hidden>Clear filters</button></div><div id="filterPanel" class="filter-panel" hidden><label class="filter-choice"><input type="checkbox" id="filterBudget"> Within my monthly budget</label><label class="filter-choice"><input type="checkbox" id="filterComplete"> All rental costs entered</label><label class="filter-choice"><input type="checkbox" id="filterCommute"> Driving commute calculated</label><button id="applyFilters" type="button" class="primary">Apply filters</button><button id="resetFilters" type="button" class="secondary">Reset</button><p class="filter-help">Filters change only which apartments are shown in the shortlist and detailed comparison. Saved apartments and the overall insights remain unchanged. Set a budget or calculate commutes before using those filters.</p></div><div id="cards" hidden aria-hidden="true"></div><div class="subtle">All costs are estimates. Total lease costs across different lease durations cannot be compared directly.</div><div id="comparison" class="comparison"></div><div id="compareNote" class="note"></div></section><div class="method"><b>How HiddenCost calculates:</b> Regular monthly cost = base rent + recurring fees + estimated utilities. Effective monthly cost = (regular monthly cost × lease months + one-time nonrefundable fees − rent concessions) ÷ lease months. Upfront cash is shown separately and can include refundable deposits; these deposits are not counted as an expense. Any unspecified cost may change the estimate. This tool does not verify lease terms or estimate future utility bills.</div></main><div id="printReport" aria-hidden="true"></div><footer class="footer">HiddenCost • Educational MVP • Data is saved only in this browser</footer>
+<div id="overlay" class="overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><h2 id="modalTitle">Add apartment</h2><p>Enter known costs. Leave unknown amounts blank to flag them.</p></div><button class="close" id="closeModal" aria-label="Close">×</button></div><form id="aptForm"><div class="modal-body">
+<section class="analyzer" aria-labelledby="analyzerTitle">
+<h3 id="analyzerTitle">✦ Smart Listing Analyzer <span style="font-size:11px;font-weight:500;color:#57788a">(no AI account needed)</span></h3>
+<p>Paste an apartment advertisement to find common rents, fees and concessions. This is a <strong>rule-based text extractor</strong>, not AI; it works best with clearly labeled amounts. Always check results against the listing or lease.</p>
+<label for="listingText" style="display:block;font-weight:700;font-size:12px;margin-bottom:6px">Apartment listing description</label>
+<textarea id="listingText" placeholder="Example: 1-bedroom apartment available for $1,650/month. Parking $100/month, trash $25/month, amenity fee $40/month, $75 application fee. One month free on a 12-month lease."></textarea>
+<div class="an-actions"><button type="button" class="secondary" id="analyzeBtn">Analyze listing</button><button type="button" class="link" id="exampleListingBtn">Try an example</button><span class="an-small">Text stays in your browser.</span></div>
+<div class="an-result" id="analyzerResult" role="status" aria-live="polite" hidden></div>
+</section><div class="section-title">Apartment details</div><div class="fields"><div class="field"><label for="name">Apartment name *</label><input id="name" maxlength="65" required placeholder="e.g., Oak Ridge Apartments"/></div><div class="field"><label for="address">Apartment street address (optional)</label><input id="address" maxlength="180" placeholder="Street, city, state, ZIP"><div class="hint">Used for commute map; not needed for rent comparisons.</div></div><div class="field"><label for="months">Lease duration (months) *</label><input type="number" id="months" min="1" max="60" step="1" value="12" required/></div><div class="field"><label for="rent">Advertised base rent ($/month) *</label><input type="number" id="rent" min="0" step="0.01" required placeholder="1600"/></div><div class="field"><label for="parking">Parking ($/month)</label><input type="number" id="parking" min="0" step="0.01" placeholder="Unknown"/></div><div class="field"><label for="utilities">Estimated utilities ($/month)</label><input type="number" id="utilities" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Electric, gas, water, etc. Use your own estimate.</div></div><div class="field"><label for="internet">Internet ($/month)</label><input type="number" id="internet" min="0" step="0.01" placeholder="Unknown"/></div><div class="field"><label for="fees">Other recurring fees ($/month)</label><input type="number" id="fees" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Trash, amenities, pest control, etc.</div></div><div class="field"><label for="once">One-time nonrefundable fees ($)</label><input type="number" id="once" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Application, admin and other fees.</div></div><div class="field"><label for="deposit">Refundable security deposit ($)</label><input type="number" id="deposit" min="0" step="0.01" placeholder="Unknown"/><div class="hint">Cash needed upfront, not a lease expense.</div></div><div class="field"><label for="concession">Total rent concessions ($)</label><input type="number" id="concession" min="0" step="0.01" placeholder="0"/><div class="hint">Example: one month of $1,600 rent free → enter 1600.</div></div></div><hr class="line-sep"/><div class="section-title">Upfront estimate</div><label class="checkline"><input type="checkbox" id="firstMonth" checked/> Include one regular month's cost in upfront cash estimate</label><div class="desc">Upfront cash = nonrefundable one-time fees + refundable deposit + optional first month's regular cost. Actual payment timing may vary; concessions are applied only to the lease-cost estimate.</div></div><div class="modal-actions"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button type="submit" class="primary">Save apartment</button></div></form></div></div><div id="replaceOverlay" class="overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="replaceTitle" style="width:min(520px,100%)"><div class="modal-head"><div><h2 id="replaceTitle">Your shortlist has 10 apartments</h2><p>Choose an apartment to replace with a new one, or cancel. The selected apartment will be removed only after confirmation.</p></div><button type="button" class="close" id="closeReplace" aria-label="Close">×</button></div><div class="modal-body" id="replaceOptions"></div><div class="modal-actions"><button type="button" class="secondary" id="cancelReplace">Keep all apartments</button></div></div></div><div id="toast" class="toast" role="status"></div>
+<script>
+(()=>{'use strict';const KEY='hiddencost-v1';const ids=['name','address','months','rent','parking','utilities','internet','fees','once','deposit','concession'];let entries=[];let editing=null;const $=id=>document.getElementById(id);const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const demo=[{id:'demo-a',name:'Oak Ridge',months:12,rent:1500,parking:125,utilities:90,internet:65,fees:55,once:175,deposit:500,concession:0,firstMonth:true},{id:'demo-b',name:'The Juniper',months:12,rent:1650,parking:0,utilities:100,internet:0,fees:35,once:75,deposit:400,concession:1650,firstMonth:true},{id:'demo-c',name:'Parkside Flats',months:12,rent:1595,parking:80,utilities:110,internet:55,fees:30,once:225,deposit:600,concession:500,firstMonth:true}];
+function read(){try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x))return x.filter(v=>v&&typeof v.name==='string').slice(0,10)}catch{}return null}function persist(){try{localStorage.setItem(KEY,JSON.stringify(entries))}catch{toast('Browser storage unavailable. Changes may not persist.')}}function val(x){return x===''||x===null||x===undefined?null:Number(x)}function num(x){return Number.isFinite(Number(x))&&x!==null?Number(x):0}function calc(a){let recurring=num(a.rent)+num(a.parking)+num(a.utilities)+num(a.internet)+num(a.fees),one=num(a.once),con=num(a.concession),months=num(a.months);let total=Math.max(0,recurring*months+one-con);let missing=['parking','utilities','internet','fees','once','deposit'].filter(k=>a[k]===null||a[k]===undefined);return{recurring,total,effective:total/months,upfront:one+num(a.deposit)+(a.firstMonth?recurring:0),missing,extras:recurring-num(a.rent)}}
+const scenarioOverrides={};
+let activeScenario=null;
+let budgetAmount=null;
+const scenarioFields={whatParking:'parking',whatUtilities:'utilities',whatInternet:'internet',whatFees:'fees',whatOnce:'once',whatConcession:'concession'};
+function scenarioCalc(a){
+ const overrides=scenarioOverrides[a.id];
+ return overrides?calc(Object.assign({},a,overrides)):calc(a);
+}
+function displayOriginal(a){return calc(a).effective;}
+function renderScenarioControls(){
+ const select=$('scenarioApartment');
+ const old=activeScenario;
+ if(!entries.some(x=>x.id===activeScenario))activeScenario=entries[0]?.id||null;
+ select.innerHTML=entries.length?entries.map(a=>'<option value="'+safe(a.id)+'">'+safe(a.name)+'</option>').join(''):'<option value="">No apartments saved</option>';
+ select.disabled=!entries.length;
+ select.value=activeScenario||'';
+ populateScenario();
+}
+function populateScenario(){
+ const a=entries.find(x=>x.id===activeScenario);
+ const overrides=a?scenarioOverrides[a.id]||{}:{};
+ for(const [element,key] of Object.entries(scenarioFields)){
+   const el=$(element), value=a?(Object.prototype.hasOwnProperty.call(overrides,key)?overrides[key]:a[key]):null;
+   el.value=value===null||value===undefined?'':String(value);
+   el.disabled=!a;
+ }
+ $('resetWhatIf').disabled=Object.keys(scenarioOverrides).length===0;
+}
+function handleScenarioChange(e){
+ const a=entries.find(x=>x.id===activeScenario);
+ if(!a)return;
+ const key=scenarioFields[e.target.id];if(!key)return;
+ const raw=e.target.value.trim();
+ if(raw!==''&&(!Number.isFinite(Number(raw))||Number(raw)<0||Number(raw)>10000000)){
+   e.target.setCustomValidity('Enter a nonnegative cost below $10,000,000.');
+   e.target.reportValidity();return;
+ }
+ e.target.setCustomValidity('');
+ const amount=raw===''?null:Number(raw);
+ const baseline=a[key]===undefined?null:a[key];
+ if(amount===baseline){
+   if(scenarioOverrides[a.id])delete scenarioOverrides[a.id][key];
+ }else{
+   if(!scenarioOverrides[a.id])scenarioOverrides[a.id]={};
+   scenarioOverrides[a.id][key]=amount;
+ }
+ if(scenarioOverrides[a.id]&&Object.keys(scenarioOverrides[a.id]).length===0)delete scenarioOverrides[a.id];
+ updateDecisionResults();
+}
+function updateDecisionResults(){
+ renderInsights();renderCompare();renderCardsOnly();renderAffordability();renderFeeDetection();
+ const a=entries.find(x=>x.id===activeScenario);
+ const changed=Object.keys(scenarioOverrides).length;
+ $('scenarioCount').textContent=changed?changed+' apartment'+(changed===1?'':'s')+' adjusted':'Original estimates';
+ $('resetWhatIf').disabled=changed===0;
+ if(!a){$('scenarioResult').textContent='Add an apartment to compare different cost scenarios.';return}
+ const old=calc(a), now=scenarioCalc(a), delta=now.effective-old.effective;
+ const missing=now.missing.length?' ('+now.missing.length+' cost fields still unknown)':'';
+ $('scenarioResult').innerHTML='<strong>'+safe(a.name)+'</strong>: '+money(now.effective)+'/mo effective estimate. '+(Math.abs(delta)<.005?'No change from saved details.':(delta>0?'Up ':'Down ')+money(Math.abs(delta))+'/mo versus the saved estimate.')+'<span style="color:#697b8c">'+missing+'</span>';
+}
+function renderCardsOnly(){
+ const cards=$('cards');
+ cards.innerHTML=entries.map(a=>{
+  const c=scenarioCalc(a), changed=!!scenarioOverrides[a.id];
+  return '<article class="compact-apt"><div class="compact-main"><div class="compact-apt-name">'+safe(a.name)+(changed?' <span class="tool-pill">What-if</span>':'')+'</div><div class="compact-apt-meta">'+a.months+'-month lease · Advertised '+money(num(a.rent))+'/mo</div></div><div class="compact-prices"><strong>'+money(c.effective)+'</strong><span>estimated effective / mo</span></div><div class="compact-tools"><span class="'+(c.missing.length?'incomplete-label':'complete-label')+'">'+(c.missing.length?'⚠ '+c.missing.length+' unknown fields':'✓ Fees entered')+'</span><button class="link" data-act="edit" data-id="'+safe(a.id)+'">Edit</button><button class="link danger" data-act="delete" data-id="'+safe(a.id)+'">Remove</button></div></article>';
+ }).join('');
+ if(entries.length<10)cards.innerHTML+='<button type="button" class="compact-add" data-act="add">＋ Add another apartment <span>('+entries.length+'/10 saved)</span></button>';
+ if(!entries.length)cards.innerHTML='<div class="empty" style="grid-column:1/-1;min-height:150px"><strong>Your shortlist is empty</strong><span>Load demo apartments or add your first listing.</span><button class="primary" style="margin-top:12px" data-act="add">Add an apartment</button></div>';
+}
+function renderAffordability(){
+ const root=$('affordResult');
+ const raw=$('monthlyBudget').value.trim();
+ if(raw===''){budgetAmount=null;root.className='tool-result';root.textContent='Enter a budget to see which apartments fit.';return}
+ const amount=Number(raw);
+ if(!Number.isFinite(amount)||amount<=0||amount>100000000){root.className='tool-result warning';root.textContent='Enter a valid positive monthly budget.';return}
+ budgetAmount=amount;
+ if(!entries.length){root.textContent='Add an apartment to check affordability.';return}
+ root.className='tool-result';
+ const within=entries.filter(a=>scenarioCalc(a).effective<=amount).length;
+ root.innerHTML='<strong>'+within+' of '+entries.length+' apartment'+(entries.length===1?'':'s')+'</strong> have an estimated monthly cost within '+money(amount)+'.<div class="afford-table">'+entries.map(a=>{
+   const c=scenarioCalc(a),left=amount-c.effective,within=left>=-0.005;
+   return '<div class="afford-row"><div class="info"><strong>'+safe(a.name)+'</strong><span>'+money(c.effective)+'/mo'+(c.missing.length?' · '+c.missing.length+' unknown fields':'')+'</span></div><div class="afford-status '+(within?'under':'over')+'">'+(within?money(Math.max(0,left))+' remaining':money(Math.abs(left))+' over')+(c.missing.length?'*':'')+'</div></div>';
+ }).join('')+'</div>'+(entries.some(a=>scenarioCalc(a).missing.length)?'<div class="tool-note">*Provisional: missing expenses are excluded, not assumed free.</div>':'');
+}
+function renderFeeDetection(){
+ const root=$('feeDetection');
+ if(!entries.length){root.textContent='Hidden fee warnings will appear when you add apartments.';return}
+ const details=[];
+ for(const a of entries){
+  const c=scenarioCalc(a);
+  const unknown=c.missing.filter(x=>x!=='deposit');
+  const share=num(a.rent)>0?c.extras/num(a.rent):null;
+  if(unknown.length)details.push('<strong>'+safe(a.name)+'</strong>: '+unknown.length+' unconfirmed fee categor'+(unknown.length===1?'y':'ies')+' ('+unknown.map(k=>({parking:'parking',utilities:'utilities',internet:'internet',fees:'other monthly fees'}[k])).join(', ')+').');
+  if(share!==null&&share>=.10)details.push('<strong>'+safe(a.name)+'</strong>: entered recurring add-ons equal '+Math.round(share*100)+'% of advertised rent ('+money(c.extras)+'/mo).');
+  if(c.missing.includes('deposit'))details.push('<strong>'+safe(a.name)+'</strong>: refundable deposit not yet confirmed.');
+ }
+ root.innerHTML='<strong>Hidden fee detection:</strong> '+(details.length?details.join('<br>'):'No missing cost categories or elevated recurring add-ons detected from the values entered.')+'<br><span style="font-size:11px">A warning indicates incomplete information or a high fee ratio—not a verified deceptive listing.</span>';
+}
+function exportComparison(){
+ if(!entries.length){toast('Add an apartment before exporting.');return}
+ const heading=['Cost item',...entries.map(a=>a.name)];
+ const rows=[
+ ['Advertised rent / mo',a=>money(num(a.rent))],
+ ['Parking / mo',a=>fieldText(a,'parking')],
+ ['Utilities / mo',a=>fieldText(a,'utilities')],
+ ['Internet / mo',a=>fieldText(a,'internet')],
+ ['Other recurring fees / mo',a=>fieldText(a,'fees')],
+ ['Regular monthly cost',a=>money(scenarioCalc(a).recurring)],
+ ['One-time nonrefundable fees',a=>fieldText(a,'once')],
+ ['Concessions',a=>money(num(scenarioCalcInput(a).concession))],
+ ['Lease length',a=>a.months+' months'],
+ ['Effective monthly cost',a=>money(scenarioCalc(a).effective)],
+ ['Total lease cost',a=>money(scenarioCalc(a).total)],
+ ['Upfront cash estimate',a=>money(scenarioCalc(a).upfront)],
+ ['Refundable deposit',a=>fieldText(a,'deposit')]
+ ];
+ const cells=heading.map(t=>'<th>'+safe(t)+'</th>').join('');
+ const table=rows.map(([label,fn])=>'<tr><td>'+safe(label)+'</td>'+entries.map(a=>'<td>'+safe(fn(a))+'</td>').join('')+'</tr>').join('');
+ const names=entries.map(a=>a.name+' — '+money(scenarioCalc(a).effective)+'/month').join('; ');
+ const missing=entries.filter(a=>scenarioCalc(a).missing.length).map(a=>a.name+': '+scenarioCalc(a).missing.join(', ')).join('; ');
+ const page=$('printReport');
+ page.innerHTML='<h1>HiddenCost — Apartment Comparison</h1><p>Generated '+new Date().toLocaleDateString('en-US')+' · '+entries.length+' apartment(s) · US dollars</p><p><strong>Monthly budget:</strong> '+(budgetAmount===null?'Not entered':money(budgetAmount))+' · <strong>What-if scenarios:</strong> '+(Object.keys(scenarioOverrides).length?'Applied (not saved to apartment details)':'None')+'</p><h2>Summary</h2><p>'+safe(names)+'</p><h2>Detailed costs</h2><table><thead><tr>'+cells+'</tr></thead><tbody>'+table+'</tbody></table><h2>Important limitations</h2><p class="report-notes">'+safe((missing?'Unknown cost fields: '+missing+'. ':'')+'Unknown expenses are not assumed to be zero. Amounts are estimates, not verified rental quotes. Refundable deposits are included in upfront cash but excluded from lease expenses. Differences in lease duration may prevent direct comparison of total lease cost. What-if estimates reflect hypothetical inputs.')+'</p>';
+ window.print();
+}
+function scenarioCalcInput(a){return Object.assign({},a,scenarioOverrides[a.id]||{})}
+function fieldText(a,key){const v=scenarioCalcInput(a)[key];return v===null||v===undefined?'Unknown':money(num(v))}
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3100)}function render(){renderScenarioControls();updateDecisionResults();if(window.HiddenCostExtraRefresh)window.HiddenCostExtraRefresh()}
+function metricWinner(key,eligible=entries){
+ if(!eligible.length)return null;
+ const values=eligible.map(a=>({apt:a,value:key==='rent'?num(a.rent):scenarioCalc(a)[key]}));
+ const low=Math.min(...values.map(x=>x.value));
+ return{value:low,apartments:values.filter(x=>Math.abs(x.value-low)<.005).map(x=>x.apt)};
+}
+function insightCard(label,result,detail,featured=false,unit='/mo'){
+ const names=result?result.apartments.map(a=>safe(a.name)).join(' & '):'More details needed';
+ const amount=result?money(result.value)+unit:'—';
+ return '<div class="insight-card'+(featured?' featured':'')+'"><div class="insight-kicker">'+label+'</div><div class="insight-name">'+names+'</div><div class="insight-value">'+amount+'</div><div class="insight-context">'+detail+'</div></div>';
+}
+function renderInsights(){
+ if(!entries.length){
+   $('insights').innerHTML='<p class="subtle">Add apartments to see which one has the lowest advertised rent, estimated effective cost and upfront cash.</p>';
+   $('takeaway').textContent='Your comparison summary will appear here.';
+   $('feeInsight').textContent='Unknown fees will be flagged so you can verify them before deciding.';
+   return;
+ }
+ const complete=entries.every(a=>scenarioCalc(a).missing.length===0);
+ const advertised=metricWinner('rent');
+ const effective=complete?metricWinner('effective'):null;
+ const upfront=complete?metricWinner('upfront'):null;
+ $('insights').innerHTML='<div class="insight-grid">'+
+   insightCard('Lowest advertised rent',advertised,'Base rent shown in the listing.')+
+   insightCard('Lowest effective monthly cost',effective,complete?'Includes recurring charges, concessions and nonrefundable fees averaged over the lease.':'Some costs are unknown. Complete every apartment to compare fairly.',true)+
+   insightCard('Lowest upfront cash',upfront,complete?'Estimated cash due at move-in, including refundable deposit where entered.':'Missing deposit or fee information prevents a reliable comparison.',false,' upfront')+
+   '</div>';
+ if(complete){
+   const lowName=effective.apartments.map(a=>safe(a.name)).join(' and ');
+   const advName=advertised.apartments.map(a=>safe(a.name)).join(' and ');
+   const upName=upfront.apartments.map(a=>safe(a.name)).join(' and ');
+   $('takeaway').innerHTML='<strong>Our take:</strong> '+lowName+' '+(effective.apartments.length>1?'tie':'has the lowest')+' estimated effective monthly cost ('+money(effective.value)+'/mo). '+advName+' '+(advertised.apartments.length>1?'tie for':'has')+' the lowest advertised rent, while '+upName+' '+(upfront.apartments.length>1?'tie for':'has')+' the lowest estimated upfront cash requirement. These are separate measures—not a single overall recommendation.';
+ }else{
+   const count=entries.filter(a=>scenarioCalc(a).missing.length).length;
+   $('takeaway').innerHTML='<strong>Our take:</strong> '+advertised.apartments.map(a=>safe(a.name)).join(' and ')+' '+(advertised.apartments.length>1?'tie for':'has')+' the lowest advertised rent ('+money(advertised.value)+'/mo). <strong>'+count+' of '+entries.length+' apartment'+(entries.length===1?'':'s')+' have missing cost fields.</strong> We cannot confidently identify the cheapest overall option until those costs are verified.';
+ }
+ const info=entries.map(a=>({a,c:scenarioCalc(a)}));
+ const high=info.filter(x=>num(x.a.rent)>0&&x.c.extras/num(x.a.rent)>=.10).sort((x,y)=>y.c.extras/num(y.a.rent)-x.c.extras/num(x.a.rent));
+ const missing=info.filter(x=>x.c.missing.length).length;
+ const line=high.length?high.map(x=>safe(x.a.name)+' ('+money(x.c.extras)+'/month in extra recurring charges)').join(' · '):'No entered recurring charges above 10% of advertised rent.';
+ $('feeInsight').innerHTML='<strong>⚠ Additional rental charges:</strong> '+line+(missing?' <strong>'+missing+' apartment(s) have unconfirmed costs.</strong>':'')+' <small>These charges are not necessarily undisclosed or misleading.</small>';
+
+}
+function renderCompare(){
+ if(!entries.length){
+   $('comparison').innerHTML='<p class="subtle">Add an apartment to see the detailed comparison.</p>';
+   $('compareNote').textContent='Unknown costs are never assumed to be free; enter 0 only when you know a fee is $0.';
+   return;
+ }
+ const fullySpecified=entries.every(a=>scenarioCalc(a).missing.length===0);
+ const sameMonths=new Set(entries.map(a=>a.months)).size===1;
+ const minRent=metricWinner('rent').value;
+ const minEffective=fullySpecified?metricWinner('effective').value:null;
+ const minUpfront=fullySpecified?metricWinner('upfront').value:null;
+ const minTotal=fullySpecified&&sameMonths?metricWinner('total').value:null;
+ const rows=[
+  ['Advertised rent / mo',a=>money(num(a.rent)),'',a=>num(a.rent)===minRent],
+  ['Parking / mo',a=>field(a,'parking')],
+  ['Utilities / mo',a=>field(a,'utilities')],
+  ['Internet / mo',a=>field(a,'internet')],
+  ['Other recurring / mo',a=>field(a,'fees')],
+  ['Regular monthly cost',a=>money(scenarioCalc(a).recurring)],
+  ['One-time nonrefundable fees',a=>field(a,'once')],
+  ['Total concessions',a=>money(num(a.concession))],
+  ['Lease term',a=>a.months+' months'],
+  ['Effective monthly cost',a=>money(scenarioCalc(a).effective),'emph',a=>minEffective!==null&&Math.abs(scenarioCalc(a).effective-minEffective)<.005],
+  ['Total lease cost',a=>money(scenarioCalc(a).total),'emph',a=>minTotal!==null&&Math.abs(scenarioCalc(a).total-minTotal)<.005],
+  ['Upfront cash estimate',a=>money(scenarioCalc(a).upfront),'',a=>minUpfront!==null&&Math.abs(scenarioCalc(a).upfront-minUpfront)<.005],
+  ['Refundable deposit (included upfront)',a=>field(a,'deposit')]
+ ];
+ $('comparison').innerHTML='<table class="compare-table"><thead><tr><th>Cost item</th>'+entries.map(a=>'<th><div class="apt-table-head"><strong>'+safe(a.name)+'</strong><span>'+a.months+'-month lease</span><div class="apt-table-actions"><button class="link" type="button" data-act="edit" data-id="'+safe(a.id)+'">Edit</button><button class="link danger" type="button" data-act="delete" data-id="'+safe(a.id)+'">Remove</button></div></div></th>').join('')+'</tr></thead><tbody>'+
+ rows.map(([label,fn,cls,isBest])=>'<tr class="'+(cls||'')+'"><td>'+safe(label)+'</td>'+entries.map(a=>'<td'+(isBest&&isBest(a)?' class="best-cell"':'')+'>'+fn(a)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ const warnings=entries.filter(a=>scenarioCalc(a).missing.length).map(a=>a.name+': '+scenarioCalc(a).missing.map(k=>({parking:'parking',utilities:'utilities',internet:'internet',fees:'other monthly fees',once:'one-time fees',deposit:'deposit'}[k])).join(', '));
+ $('compareNote').innerHTML=(warnings.length?'<strong>Incomplete estimates:</strong> '+safe(warnings.join(' • '))+'. Unknown amounts are excluded from totals, not verified as zero. ':'All cost fields have values. ')+(!sameMonths?'<strong>Lease lengths differ:</strong> total lease costs are not ranked; effective monthly estimates reflect different durations. ':'')+'Green cells highlight lowest values only when comparable. Actual prices and due dates may differ. Unentered expenses, taxes, insurance, or future price changes are excluded.';
+}
+function field(a,key){return a[key]===null||a[key]===undefined?'<span style="color:#b54734">Unknown</span>':money(num(a[key]))}
+function extractListing(){
+ const input=document.getElementById('listingText').value.trim(), output=document.getElementById('analyzerResult');
+ output.hidden=false;
+ if(!input){output.textContent='Paste a listing description first.';return}
+ const clean=input.replace(/\u00a0/g,' ').replace(/[–—]/g,'-'), dollars='\\$\\s*([\\d,]+(?:\\.\\d{1,2})?)';
+ const items=[], warnings=[], used={};
+ function numeric(v){const n=Number(String(v).replace(/,/g,''));return Number.isFinite(n)?n:null}
+ function find(label,pattern,field,aggregate=false){
+   const rx=new RegExp(pattern,'gi');let m,values=[];
+   while((m=rx.exec(clean))!==null){const n=numeric(m[1]);if(n!==null)values.push(n);if(rx.lastIndex===m.index)rx.lastIndex++;}
+   if(values.length){if(!aggregate&&new Set(values).size>1){warnings.push('Multiple '+label+' amounts found; verify which applies.');return}
+    const n=aggregate?values.reduce((a,b)=>a+b,0):values[0];used[field]=n;items.push({label:label,value:n,field:field});}
+ }
+ // Match amounts closely associated with their labels. Never infer unmentioned charges.
+ find('Base rent','(?:base\\s+rent|monthly\\s+rent|rent\\s+is|rent\\s+of|(?:apartment|unit|studio|bedroom)\\s+(?:available\\s+)?for)\\s*(?:is|at|of|:)?\\s*'+dollars,'rent');
+ if(used.rent===undefined){
+   find('Base rent',dollars+'\\s*(?:\\/\\s*(?:mo|month)|per\\s+month)\\s*(?:base\\s+)?rent','rent');
+ }
+ find('Lease duration','(?:on\\s+a|for\\s+a|on\\s+an?|for\\s+an?|lease\\s+(?:term|of|is|:)?\\s*)(\\d{1,2})\\s*[- ]?month\\s+lease|(?:lease\\s+(?:term|of|is|:)?\\s*)(\\d{1,2})\\s*months?', 'months');
+ // The lease regex has two possible capture groups; handle separately if first form did not find a value.
+ if(used.months===undefined){
+    const mm=clean.match(/(?:on|for)\s+a\s+(\d{1,2})\s*[- ]?month\s+lease|\b(\d{1,2})\s*[- ]?month\s+lease|lease\s+(?:term\s*:?\s*)?(\d{1,2})\s+months?/i);
+    if(mm){const n=Number(mm[1]||mm[2]||mm[3]);if(n>=1&&n<=60){used.months=n;items.push({label:'Lease duration',value:n,field:'months'})}}
+ }
+ const specs=[
+  ['Parking','parking','parking(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Internet','internet','(?:internet|wi[- ]?fi)(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Utilities','utilities','(?:utilities|utility\\s+estimate)(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Trash','fees','(?:trash|valet\\s+trash)(?:\\s+(?:fee|service|cost|charge|is))?'],
+  ['Amenity','fees','(?:amenit(?:y|ies))(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Pest control','fees','(?:pest\\s+control)(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Application fee','once','(?:application|app)(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Administration fee','once','(?:administration|administrative|admin)(?:\\s+(?:fee|cost|charge|is))?'],
+  ['Security deposit','deposit','(?:(?:refundable\\s+)?security\\s+deposit|deposit)']
+ ];
+ const matches=[];
+ for(const [label,field,expr] of specs){
+   const forward=new RegExp('\\b'+expr+'\\s*(?:of|at|:)?\\s*'+dollars,'gi');
+   const reverse=new RegExp(dollars+'\\s*(?:(?:\\/|per)\\s*(?:month|mo)\\s*)?'+expr+'\\b','gi');
+   const found=[];let m;
+   while((m=forward.exec(clean))!==null){if(numeric(m[1])!==null)found.push({v:numeric(m[1]),at:m.index})}
+   while((m=reverse.exec(clean))!==null){if(numeric(m[1])!==null)found.push({v:numeric(m[1]),at:m.index})}
+   if(new Set(found.map(x=>x.v)).size>1){warnings.push('More than one '+label.toLowerCase()+' amount; enter it manually.');continue}
+   if(found.length){const n=found[0].v;matches.push({label,field,value:n});}
+ }
+ for(const item of matches){if(used[item.field]===undefined)used[item.field]=0;used[item.field]+=item.value;items.push(item)}
+ // Recognize a simple 1-month-free concession, only when rent is known.
+ const free=clean.match(/\b(?:one|1)\s+month\s+(?:of\s+rent\s+)?free\b|\b(?:one|1)\s+free\s+month\b/i);
+ if(free&&used.rent!==undefined){used.concession=used.rent;items.push({label:'One month free (estimated concession)',field:'concession',value:used.rent})}
+ else if(free)warnings.push('Free-month offer found but rent was not extracted; calculate the concession manually.');
+ const mentions=['parking','utilities','internet','fees','once','deposit'].filter(k=>used[k]===undefined);
+ if(mentions.length)warnings.push('Not found: '+mentions.map(k=>({parking:'parking',utilities:'utilities',internet:'internet',fees:'other monthly fees',once:'one-time fees',deposit:'security deposit'}[k])).join(', ')+'. Missing does not mean $0.');
+ if(items.length===0){output.innerHTML='<div class="warn">No clearly labeled amounts found. Try manual entry, or use the example to see supported wording.</div>';return}
+ const fmt=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+ const bullet=items.map(x=>'<li>'+safe(x.label)+': <strong>'+(x.field==='months'?x.value+' months':fmt(x.value))+'</strong></li>').join('');
+ output.innerHTML='<strong class="ok">Found '+items.length+' item'+(items.length===1?'':'s')+'. Review before applying:</strong><ul>'+bullet+'</ul>'+(warnings.length?'<div class="warn">'+warnings.map(x=>'<div>⚠ '+safe(x)+'</div>').join('')+'</div>':'')+'<button class="primary" type="button" id="applyListingBtn" style="margin-top:12px">Apply to form</button>';
+ document.getElementById('applyListingBtn').onclick=()=>{
+   const existing=Object.keys(used).filter(k=>document.getElementById(k).value.trim()!=='' && !(k==='months'&&document.getElementById(k).value==='12'));
+   if(existing.length&&!confirm('Replace '+existing.length+' already-entered value(s) with extracted amounts?'))return;
+   for(const [key,val] of Object.entries(used))document.getElementById(key).value=String(val);
+   toast('Extracted values applied. Verify all charges before saving.');
+   output.insertAdjacentHTML('beforeend','<p class="ok"><strong>Applied.</strong> Check the fields below, then save.</p>');
+ };
+}
+function openReplacePicker(){const options=$('replaceOptions');options.innerHTML=entries.map(a=>'<button type="button" class="secondary" style="display:block;width:100%;text-align:left;margin:8px 0;padding:13px 16px" data-replace="'+safe(a.id)+'">'+safe(a.name)+' <span style="color:var(--muted);font-size:12px">· '+money(calc(a).effective)+'/month</span></button>').join('');$('replaceOverlay').classList.add('open');$('closeReplace').focus()}function closeReplacePicker(){$('replaceOverlay').classList.remove('open')}function chooseReplace(id){const a=entries.find(x=>x.id===id);if(!a)return;if(!confirm('Remove '+a.name+' from your shortlist and create a new apartment?'))return;entries=entries.filter(x=>x.id!==id);delete scenarioOverrides[id];persist();render();closeReplacePicker();openModal();toast('Apartment removed. Enter the replacement details.')}
+function openModal(id=null){if(!id&&entries.length>=10){openReplacePicker();return}editing=id;const a=id?entries.find(v=>v.id===id):null;$('modalTitle').textContent=a?'Edit apartment':'Add apartment';ids.forEach(k=>{$(k).value=a?(a[k]===null||a[k]===undefined?'':a[k]):(k==='months'?'12':'')});$('firstMonth').checked=a?a.firstMonth!==false:true;$('listingText').value='';$('analyzerResult').hidden=true;$('analyzerResult').innerHTML='';$('overlay').classList.add('open');$('name').focus()}function closeModal(){$('overlay').classList.remove('open');editing=null}function save(e){e.preventDefault();let a={id:editing||('apt-'+Date.now()),firstMonth:$('firstMonth').checked};for(const k of ids)a[k]=(k==='name'||k==='address')?$(k).value.trim():val($(k).value);if(!a.name){toast('Enter an apartment name.');return}if(!Number.isInteger(a.monts)||a.months<1||a.months>60){toast('Lease term must be 1–60 whole months.');return}if(a.rent===null||a.rent<0||!Number.isFinite(a.rent)){toast('Enter a valid advertised rent.');return}if(ids.slice(3).some(k=>a[k]!==null&&(!Number.isFinite(a[k])||a[k]<0))){toast('All costs must be nonnegative amounts.');return}if(num(a.concession)>calc({...a,concession:0}).recurring*a.months+num(a.once)){toast('Total concession cannot exceed the pre-discount lease cost.');return}if(editing){entries=entries.map(x=>x.id===editing?a:x);delete scenarioOverrides[editing]}else entries.push(a);persist();render();closeModal();toast(editing?'Apartment updated.':'Apartment saved.')}function loadDemo(){if(entries.length&&!confirm('Replace your current shortlist with the three demo apartments?'))return;entries=demo.map(x=>({...x}));persist();render();toast('Demo apartments loaded.')}function reset(){if(!confirm('Reset the shortlist to demo apartments? This replaces saved entries.'))return;entries=demo.map(x=>({...x}));persist();render();toast('Demo restored.')}
+$('analyzeBtn').onclick=extractListing;$('exampleListingBtn').onclick=()=>{$('listingText').value='1-bedroom apartment available for $1,650/month. Parking $100/month, trash $25/month, amenity fee $40/month, $75 application fee. One month free on a 12-month lease.';extractListing()};$('closeReplace').onclick=closeReplacePicker;$('cancelReplace').onclick=closeReplacePicker;$('replaceOverlay').addEventListener('click',e=>{if(e.target===$('replaceOverlay'))closeReplacePicker()});$('replaceOptions').addEventListener('click',e=>{const b=e.target.closest('button[data-replace]');if(b)chooseReplace(b.dataset.replace)});$('scenarioApartment').addEventListener('change',e=>{activeScenario=e.target.value;populateScenario();updateDecisionResults()});
+for(const element of Object.keys(scenarioFields))$(element).addEventListener('input',handleScenarioChange);
+$('resetWhatIf').addEventListener('click',()=>{for(const key of Object.keys(scenarioOverrides))delete scenarioOverrides[key];populateScenario();updateDecisionResults();toast('What-if changes reset.')});
+$('monthlyBudget').addEventListener('input',()=>{renderAffordability()});
+$('exportReport').addEventListener('click',exportComparison);
+$('heroAdd').onclick=()=>openModal();$('addBtn').onclick=()=>openModal();$('heroDemo').onclick=loadDemo;$('resetDemo').onclick=reset;$('closeModal').onclick=closeModal;$('cancelBtn').onclick=closeModal;$('aptForm').onsubmit=save;$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeReplacePicker()}});$('comparison').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;const {act,id}=b.dataset;if(act==='add')openModal();else if(act==='edit')openModal(id);else if(act==='delete'){let a=entries.find(x=>x.id===id);if(a&&confirm('Remove '+a.name+'?')){entries=entries.filter(x=>x.id!==id);persist();render();toast('Apartment removed.')}}});entries=read()??demo.map(x=>({...x}));window.HiddenCostGetEntries=()=>entries;window.HiddenCostSortEntries=(ids)=>{const positions=new Map(ids.map((id,i)=>[id,i]));entries.sort((a,b)=>(positions.get(a.id)??999)-(positions.get(b.id)??999));render()};render();
+})();
+</script><script src="commute.js"></script></body></html>
