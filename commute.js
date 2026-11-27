@@ -104,7 +104,7 @@ function refresh(){
    const arr=all(),b=budget();
    const annual=$('annualBudget');
    if(annual){
-     annual.textContent=b===null?'Approximate Annual Cost: —':'Approximate Annual Cost: '+usd(b*12);
+     const value=annual.querySelector('.annual-value');if(value)value.textContent=b===null?'—':usd(b*12);
    }
    $('budgetSummary').textContent=b==null?'Optional: enter a maximum estimated monthly housing cost.':arr.filter(a=>effective(a)<=b).length+' of '+arr.length+' apartments have estimated effective rent within '+usd(b)+'/month (unknown charges may change this).';
    // Show affordability in the main comparison itself, without excluding properties.
