@@ -158,29 +158,53 @@ async function requestPaced(){
  const d=Math.max(0,1150-(Date.now()-requestsAt));if(d)await new Promise(done=>setTimeout(done,d));
  requestsAt=Date.now();
 }
-async function geocode(address){
+async function geocode(address,preferred){
  const key=address.trim().toLowerCase();
+ if(preferred&&Number.isFinite(preferred.lat)&&Number.isFinite(preferred.lon))return{lat:preferred.lat,lon:preferred.lon};
  if(geocodeCache.has(key))return geocodeCache.get(key);
  await requestPaced();
- const res=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+encodeURIComponent(address),{headers:{Accept:'application/json'}});
- if(!res.ok)throw Error('Address lookup failed ('+res.status+').');
- const data=await res.json();
- if(!data?.length)throw Error('Address not found: '+address+'. Enter a complete street, city and state.');
- const point={lat:Number(data[0].lat),lon:Number(data[0].lon)};
- if(!Number.isFinite(point.lat)||!Number.isFinite(point.lon))throw Error('Location returned invalid coordinates.');
- geocodeCache.set(key,point);return point;
+ // Photon supports the autocomplete suggestions users select. It also resolves typed addresses.
+ let lastError=null;
+ try{
+   const res=await fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(address)+'&limit=1',{headers:{Accept:'application/json'}});
+   if(!res.ok)throw Error('Photon lookup temporarily unavailable ('+res.status+').');
+   const data=await res.json();
+   const point=data.features?.[0]?.geometry?.coordinates;
+   if(point&&Number.isFinite(point[0])&&Number.isFinite(point[1])){
+     const p={lon:point[0],lat:point[1]};geocodeCache.set(key,p);return p;
+   }
+   lastError=new Error('Address not found. Choose a suggestion or enter street, city and state.');
+ }catch(e){lastError=e}
+ // One-off fallback; never autocomplete against public Nominatim.
+ await requestPaced();
+ try{
+   const res=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+encodeURIComponent(address),{headers:{Accept:'application/json'}});
+   if(!res.ok)throw Error('Fallback address lookup unavailable ('+res.status+').');
+   const data=await res.json();
+   if(!data?.length)throw Error('Could not find address. Please select an autocomplete result.');
+   const p={lat:Number(data[0].lat),lon:Number(data[0].lon)};
+   if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))throw Error('Invalid coordinates.');
+   geocodeCache.set(key,p);return p;
+ }catch(e){throw Error((lastError?.message||'Address not recognized')+' '+e.message)}
 }
 async function routing(from,to,mode){
- await requestPaced();
- // Routing engine is selected by the routed-car / routed-foot server prefix.
- const url='https://routing.openstreetmap.de/routed-'+mode+'/route/v1/driving/'+from.lon+','+from.lat+';'+to.lon+','+to.lat+'?overview=false';
- const res=await fetch(url,{headers:{Accept:'application/json'}});
- if(!res.ok)throw Error(mode+' routing unavailable ('+res.status+').');
- const data=await res.json();
- if(data.code!=='Ok'||!data.routes?.length)throw Error('No '+mode+' route found.');
- const r=data.routes[0];
- if(!Number.isFinite(r.distance)||!Number.isFinite(r.duration))throw Error('Invalid route measurements.');
- return{miles:r.distance/1609.344,minutes:r.duration/60};
+ const coords=from.lon+','+from.lat+';'+to.lon+','+to.lat;
+ const sources=['https://routing.openstreetmap.de/routed-'+mode+'/route/v1/driving/'+coords+'?overview=false'];
+ if(mode==='car')sources.push('https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=false');
+ const errors=[];
+ for(const url of sources){
+   try{
+     await requestPaced();
+     const res=await fetch(url,{headers:{Accept:'application/json'}});
+     if(!res.ok)throw Error('HTTP '+res.status);
+     const data=await res.json();
+     if(data.code!=='Ok'||!data.routes?.length)throw Error('No route for this travel mode');
+     const r=data.routes[0];
+     if(!Number.isFinite(r.distance)||!Number.isFinite(r.duration))throw Error('Invalid routing measurements');
+     return{miles:r.distance/1609.344,minutes:r.duration/60};
+   }catch(e){errors.push(e.message)}
+ }
+ throw Error(mode+' route unavailable ('+errors.join('; ')+')');
 }
 async function calculateAll(){
  if(routeBusy)return;
@@ -192,11 +216,11 @@ async function calculateAll(){
  let completed=0,failures=[];
  try{
    let destination;
-   try{destination=await geocode(dest)}catch(e){$('commuteStatus').textContent='Destination lookup failed: '+e.message;return}
+   try{destination=await geocode(dest,window.HiddenCostSelectedAddress?.('destination',dest))}catch(e){$('commuteStatus').textContent='Destination lookup failed: '+e.message;return}
    for(const a of valid){
      $('commuteStatus').textContent='Calculating routes '+(completed+1)+' of '+valid.length+' — '+a.name+'…';
      try{
-       const from=await geocode(a.address);
+       const from=await geocode(a.address,a.addressPoint);
        let car=null,walk=null;
        try{car=await routing(from,destination,'car')}catch(e){failures.push(a.name+' (drive: '+e.message+')')}
        try{walk=await routing(from,destination,'foot')}catch(e){failures.push(a.name+' (walk: '+e.message+')')}
