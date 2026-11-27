@@ -102,6 +102,10 @@ function refresh(){
  if(refreshing)return;refreshing=true;
  try{
    const arr=all(),b=budget();
+   const annual=$('annualBudget');
+   if(annual){
+     annual.textContent=b===null?'Approximate Annual Cost: —':'Approximate Annual Cost: '+usd(b*12);
+   }
    $('budgetSummary').textContent=b==null?'Optional: enter a maximum estimated monthly housing cost.':arr.filter(a=>effective(a)<=b).length+' of '+arr.length+' apartments have estimated effective rent within '+usd(b)+'/month (unknown charges may change this).';
    // Show affordability in the main comparison itself, without excluding properties.
    const table=$('comparison')?.querySelector('table');
@@ -230,7 +234,7 @@ function printReport(){
  ['Regular monthly housing cost',a=>usd(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))],
  ['Effective monthly rent',a=>usd(effective(a))],
  ['Lease term',a=>a.months+' months'],
- ['Total lease cost',a=>usd(effective(a)*Math.max(1,val(a.months)))],
+ ['Approx. Annual Leasing Cost (annualized)',a=>usd(effective(a)*12)],
  ['Upfront cash',a=>usd(val(a.once)+val(a.deposit)+(a.firstMonth?val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees):0))],
  ['Driving distance',a=>route(a)?.car?route(a).car.miles.toFixed(1)+' miles':'Not calculated'],
  ['Driving time',a=>route(a)?.car?Math.round(route(a).car.minutes)+' min':'Not calculated'],
@@ -238,7 +242,7 @@ function printReport(){
  ];
  const headers='<th>Metric</th>'+arr.map(a=>'<th>'+esc(a.name)+'</th>').join('');
  const rows=labels.map(([label,fn])=>'<tr><td>'+esc(label)+'</td>'+arr.map(a=>'<td>'+esc(fn(a))+'</td>').join('')+'</tr>').join('');
- $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
+ $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Annual leasing costs are annualized estimates calculated as twelve times estimated effective monthly cost, not official quotes. Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
  window.print();
 }
 function init(){
