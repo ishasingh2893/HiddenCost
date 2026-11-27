@@ -251,6 +251,8 @@ function printReport(){
  const b=budget(),dest=$('destination').value.trim();
  const labels=[
  ['Advertised monthly rent',a=>usd(val(a.rent))],
+ ['Apartment area',a=>val(a.area)>0?val(a.area).toLocaleString('en-US')+' sq ft':'Not entered'],
+ ['Advertised rent per sq ft / month',a=>val(a.area)>0?usd(val(a.rent)/val(a.area))+'/sq ft':'Not entered'],
  ['Regular monthly housing cost',a=>usd(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))],
  ['Effective monthly rent',a=>usd(effective(a))],
  ['Compared lease term',a=>leaseMonths(a)+' months'+(leaseMonths(a)!==val(a.months)?' (hypothetical)':'')],
