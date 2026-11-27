@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id);
 const escapeHTML=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const conf=window.HIDDENCOST_AUTH_CONFIG||{};
-const configured=/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(conf.url||'') && typeof conf.anonKey==='string'&&conf.anonKey.length>50;
+const configured=/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(conf.url||'') && typeof conf.anonKey==='string'&&conf.anonKey.length>=16;
 let client=null,email='',session=null;
 function message(txt){$('authMessage').textContent=txt}
 function starred(){
