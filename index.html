@@ -165,9 +165,41 @@
 .subtle{font-size:var(--type-body-size);color:var(--type-body-color)}
 .budget-small,.commute-fineprint,.budget-unit{font-size:var(--type-caption-size)}
 @media(max-width:650px){.budgetbar>label.section-heading,#commuteHeading.section-heading,#insightsPanel h2.section-heading{font-size:var(--type-heading-size)}}
+
+/* Unified compact visual hierarchy: hero / section / supporting text. */
+:root{--font-hero:clamp(32px,3.7vw,48px);--font-section:22px;--font-text:14px;--font-caption:12px}
+.nav .logo{font-size:23px;letter-spacing:-.045em}
+.nav-right{font-size:var(--font-text);color:#c3d0dc}
+.nav{padding:18px 0}
+.hero{max-width:900px;padding:24px 0 32px}
+.hero h1{font-size:var(--font-hero);letter-spacing:-.04em;line-height:1.14;margin:12px 0 13px}
+.hero .eyebrow{font-size:var(--font-caption);letter-spacing:.09em}
+.hero p{font-size:var(--font-text);line-height:1.5;margin:0 0 17px;max-width:680px}
+.hero .cta{font-size:var(--font-text);padding:11px 16px}
+.content{padding-top:20px}
+:root{--type-heading-size:var(--font-section);--type-subheading-size:var(--font-text);--type-body-size:var(--font-text);--type-caption-size:var(--font-caption)}
+.panel h2,.commute-inline h2,.section-heading,
+.budgetbar .section-heading,#commuteHeading.section-heading,#insightsPanel h2.section-heading{
+ font-size:var(--font-section);color:var(--type-heading-color);line-height:1.22;letter-spacing:-.03em;font-weight:800
+}
+.budgetbar{display:grid;grid-template-columns:minmax(200px,1.25fr) minmax(110px,.52fr) minmax(185px,1fr) auto;align-items:center;column-gap:16px;row-gap:9px;padding:13px 17px;margin-bottom:14px}
+.budget-heading{display:flex;flex-direction:column;gap:3px;min-width:0}
+.budget-heading label{padding:0!important;margin:0;white-space:normal}
+.budget-unit{font-size:var(--font-caption);color:var(--muted);font-weight:400}
+.budget-input{display:flex;align-items:center;border:1px solid #cadae5;border-radius:8px;min-width:0;padding-left:11px;background:#fff}
+.budget-input>span{color:var(--muted);font-size:var(--font-text)}
+.budgetbar .budget-input input{border:0;background:transparent;padding:10px 8px;width:100%;min-width:0;font-size:var(--font-text);outline-offset:-2px}
+.budget-details{display:flex;flex-direction:column;gap:2px;min-width:0;align-self:center}
+.annual-budget{display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:6px}
+.annual-budget .subheading{color:var(--type-subheading-color);font-size:var(--font-text);font-weight:700}
+.annual-budget .annual-value{font-size:var(--font-text);color:var(--type-heading-color);font-weight:800}
+.budget-small{font-size:11px;line-height:1.3;color:var(--muted)}
+.budgetbar #exportReport{padding:10px 13px;font-size:var(--font-caption);white-space:nowrap}
+@media(max-width:900px){.budgetbar{grid-template-columns:1fr 130px}.budget-details{grid-column:1/-1}.budgetbar #exportReport{grid-column:1/-1;justify-self:start}}
+@media(max-width:520px){.hero{padding:21px 0 26px}.budgetbar{grid-template-columns:minmax(0,1fr) 115px;padding:13px}.budget-heading .section-heading{font-size:20px!important}}
 </style></head><body>
 <header class="top"><div class="shell"><nav class="nav"><div class="logo">Hidden<span>Cost</span></div><div class="nav-right">Smart Rental Decisions</div></nav><div class="hero"><div><div class="eyebrow">Rental Comparison, Minus the Surprises!</div><h1>The rent you see isn't always <em>the rent you pay.</em></h1><p>Compare apartments on zillions of factors that matter, <strong>NOT JUST</strong> the monthly rent!</p><button class="cta" id="heroAdd">+ Add an apartment</button></div></div></div></header>
-<main class="shell content"><div class="budgetbar"><label for="monthlyBudget" class="section-heading"><strong>Monthly Housing Budget</strong> <span class="budget-unit">($/month)</span></label><input id="monthlyBudget" type="number" min="1" placeholder="e.g. 1900" inputmode="decimal"><div class="budget-details"><div id="annualBudget" class="annual-budget" aria-live="polite"><span class="subheading">Approx. Annual Budget</span><span class="annual-value">—</span></div><div id="budgetSummary" class="budget-small">Over-budget apartments stay visible unless you filter them.</div></div><button id="exportReport" class="secondary" type="button">↓ Export comparison PDF</button></div>
+<main class="shell content"><div class="budgetbar"><div class="budget-heading"><label for="monthlyBudget" class="section-heading">Monthly Housing Budget</label><span class="budget-unit">Enter your maximum monthly housing cost</span></div><div class="budget-input"><span aria-hidden="true">$</span><input id="monthlyBudget" type="number" min="1" placeholder="1,900" inputmode="decimal" aria-label="Monthly Housing Budget in dollars"></div><div class="budget-details"><div id="annualBudget" class="annual-budget" aria-live="polite"><span class="subheading">Approx. Annual Budget</span><span class="annual-value">—</span></div><div id="budgetSummary" class="budget-small">Over-budget apartments remain visible unless filtered.</div></div><button id="exportReport" class="secondary" type="button">↓ Export PDF</button></div>
 <section class="commute-inline" aria-labelledby="commuteHeading"><div class="commute-inline-top"><div><h2 id="commuteHeading" class="section-heading">Workplace/College Address</h2><div class="subtle">Enter an address where you commute daily/frequently to compare apartments</div></div><div class="commute-controls"><label for="destination" class="sr-only">Workplace or college street address</label><input id="destination" maxlength="200" placeholder="Workplace or college street address, city, state" autocomplete="street-address"/><button type="button" class="primary" id="calculateCommute">Calculate all commutes</button></div></div><div class="commute-inline-bottom"><div id="commuteStatus" role="status">Commute estimates will appear here after you calculate routes.</div><label for="commuteSort">Sort apartments by <select id="commuteSort"><option value="driveDistance">Driving distance (shortest)</option><option value="driveTime">Driving time (fastest)</option><option value="walkTime">Walking time (fastest)</option><option value="cost">Effective rent (lowest)</option></select></label></div></section>
 <section class="panel" id="insightsPanel" style="margin-top:0"><h2 class="section-heading">HiddenCost Insights</h2><div class="subtle">Overall conclusions across all saved apartments. Filters do not change these overall insights.</div><div id="insights"></div><div id="takeaway" class="takeaway"></div><div id="feeInsight" class="fee-insight"></div><div id="commuteInsight" class="takeaway" aria-live="polite" style="margin-top:11px"></div></section>
 <div id="feeDetection" hidden aria-hidden="true"></div>
