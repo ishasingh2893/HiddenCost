@@ -250,6 +250,7 @@ function printReport(){
  const arr=all();if(!arr.length){alert('Add an apartment before exporting.');return}
  const b=budget(),dest=$('destination').value.trim();
  const labels=[
+ ['Starred',a=>a.starred?'★ Starred':'Not starred'],
  ['Advertised monthly rent',a=>usd(val(a.rent))],
  ['Apartment area',a=>val(a.area)>0?val(a.area).toLocaleString('en-US')+' sq ft':'Not entered'],
  ['Advertised rent per sq ft / month',a=>val(a.area)>0?usd(val(a.rent)/val(a.area))+'/sq ft':'Not entered'],
@@ -263,9 +264,9 @@ function printReport(){
  ['Driving time',a=>route(a)?.car?Math.round(route(a).car.minutes)+' min':'Not calculated'],
  ['Walking time',a=>route(a)?.walk?Math.round(route(a).walk.minutes)+' min':'Not calculated']
  ];
- const headers='<th>Metric</th>'+arr.map(a=>'<th>'+esc(a.name)+'</th>').join('');
+ const headers='<th>Metric</th>'+arr.map(a=>'<th>'+esc(a.name)+(a.starred?' ★':'')+'</th>').join('');
  const rows=labels.map(([label,fn])=>'<tr><td>'+esc(label)+'</td>'+arr.map(a=>'<td>'+esc(fn(a))+'</td>').join('')+'</tr>').join('');
- $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Annual leasing costs are annualized estimates calculated as twelve times estimated effective monthly cost, not official quotes. Changed lease durations are hypothetical and keep entered monthly prices, one-time fees and total concessions unchanged. Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
+ $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p><strong>★ Starred apartments:</strong> '+(arr.some(a=>a.starred)?arr.filter(a=>a.starred).map(a=>esc(a.name)).join(', '):'None')+'</p><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Annual leasing costs are annualized estimates calculated as twelve times estimated effective monthly cost, not official quotes. Changed lease durations are hypothetical and keep entered monthly prices, one-time fees and total concessions unchanged. Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
  window.print();
 }
 function init(){
