@@ -5,7 +5,9 @@ const all=()=>typeof window.HiddenCostGetEntries==='function'?window.HiddenCostG
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
 const val=n=>n==null?0:Number(n)||0;
-const effective=a=>Math.max(0,(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))*Math.max(1,val(a.months))+val(a.once)-val(a.concession))/Math.max(1,val(a.months));
+const effective=a=>typeof window.HiddenCostEffective==='function'?window.HiddenCostEffective(a):Math.max(0,(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))*Math.max(1,val(a.months))+val(a.once)-val(a.concession))/Math.max(1,val(a.months));
+const leaseMonths=a=>typeof window.HiddenCostLeaseMonths==='function'?window.HiddenCostLeaseMonths(a):val(a.months);
+const termTotal=a=>typeof window.HiddenCostTermTotal==='function'?window.HiddenCostTermTotal(a):effective(a)*leaseMonths(a);
 const routeData=new Map(),geocodeCache=new Map();
 let requestsAt=0,routeBusy=false,refreshing=false;let filters={budget:false,complete:false,commute:false};
 function budget(){
@@ -115,15 +117,13 @@ function refresh(){
        const apartment=arr[i];if(!apartment)return;
        head.classList.remove('budget-head-ok','budget-head-over');
        head.querySelector('.budget-table-label')?.remove();
-       if(b!==null){
-         const within=effective(apartment)<=b;
-         head.classList.add(within?'budget-head-ok':'budget-head-over');
+       if(b!==null&&effective(apartment)>b){
+         head.classList.add('budget-head-over');
          const tag=document.createElement('span');
          tag.className='budget-table-label';
          const uncertain=['parking','utilities','internet','fees','once'].some(k=>apartment[k]===null||apartment[k]===undefined);
-         tag.textContent=(within?'✓ Within budget':'⚠ Above budget')+(uncertain?' · provisional':'');
-         const wrapper=head.querySelector('.apt-table-head')||head;
-         wrapper.appendChild(tag);
+         tag.textContent='⚠ Above budget'+(uncertain?' · excludes unknown costs':'');
+         (head.querySelector('.apt-table-head')||head).appendChild(tag);
        }
      });
    }
@@ -133,11 +133,7 @@ function refresh(){
      card.classList.remove('within-budget','over-budget');
      card.querySelectorAll('.budget-label,.commute-label').forEach(el=>el.remove());
      if(b!=null){
-       const good=effective(a)<=b;
-       card.classList.add(good?'within-budget':'over-budget');
-       const tag=document.createElement('span');tag.className='budget-label';tag.textContent=good?' · Within budget':' · Above budget';
-       tag.style.cssText='font-size:11px;font-weight:750;color:'+(good?'#087f79':'#b54734');
-       card.querySelector('.compact-apt-meta')?.appendChild(tag);
+       if(effective(a)>b){card.classList.add('over-budget');const tag=document.createElement('span');tag.className='budget-label';tag.textContent=' · Above budget';tag.style.cssText='font-size:13px;font-weight:750;color:#b54734';card.querySelector('.compact-apt-meta')?.appendChild(tag)}
      }
      const r=route(a);
      if(r&&r.car){
@@ -233,7 +229,8 @@ function printReport(){
  ['Advertised monthly rent',a=>usd(val(a.rent))],
  ['Regular monthly housing cost',a=>usd(val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees))],
  ['Effective monthly rent',a=>usd(effective(a))],
- ['Lease term',a=>a.months+' months'],
+ ['Compared lease term',a=>leaseMonths(a)+' months'+(leaseMonths(a)!==val(a.months)?' (hypothetical)':'')],
+ ['Estimated cost for selected term',a=>usd(termTotal(a))],
  ['Approx. Annual Leasing Cost (annualized)',a=>usd(effective(a)*12)],
  ['Upfront cash',a=>usd(val(a.once)+val(a.deposit)+(a.firstMonth?val(a.rent)+val(a.parking)+val(a.utilities)+val(a.internet)+val(a.fees):0))],
  ['Driving distance',a=>route(a)?.car?route(a).car.miles.toFixed(1)+' miles':'Not calculated'],
@@ -242,7 +239,7 @@ function printReport(){
  ];
  const headers='<th>Metric</th>'+arr.map(a=>'<th>'+esc(a.name)+'</th>').join('');
  const rows=labels.map(([label,fn])=>'<tr><td>'+esc(label)+'</td>'+arr.map(a=>'<td>'+esc(fn(a))+'</td>').join('')+'</tr>').join('');
- $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Annual leasing costs are annualized estimates calculated as twelve times estimated effective monthly cost, not official quotes. Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
+ $('printReport').innerHTML='<h1>HiddenCost Apartment Comparison</h1><p>'+new Date().toLocaleDateString('en-US')+' · Budget: '+(b?usd(b):'Not entered')+' · Destination: '+esc(dest||'Not entered')+'</p><table><thead><tr>'+headers+'</tr></thead><tbody>'+rows+'</tbody></table><p class="report-notes">Annual leasing costs are annualized estimates calculated as twelve times estimated effective monthly cost, not official quotes. Changed lease durations are hypothetical and keep entered monthly prices, one-time fees and total concessions unchanged. Missing fees are excluded from totals, not verified as zero. Rent figures are estimates. Travel times are routing estimates without current traffic or service delays. Unmeasured routes are omitted from commute rankings.</p>';
  window.print();
 }
 function init(){
