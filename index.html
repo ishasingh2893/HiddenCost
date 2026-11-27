@@ -236,6 +236,16 @@
  #comparisonPanel .actions button{flex:1 1 auto}
  .budgetbar{height:auto;grid-template-columns:minmax(0,1fr) 130px}
 }
+
+/* Readable supporting text in the three core panels. */
+.budgetbar .budget-unit,.budgetbar .budget-small,
+.commute-inline .subtle,#insightsPanel>.subtle,
+#comparisonPanel .subtle{font-size:15px;line-height:1.5}
+#insightsPanel .insight-context{font-size:14px;line-height:1.5}
+#insightsPanel .takeaway,#insightsPanel .fee-insight{font-size:15px;line-height:1.6}
+#comparisonPanel .filter-help{font-size:14px}
+#comparisonPanel .filter-toolbar{gap:10px}
+@media(max-width:960px){#comparisonPanel .toolbar{flex-direction:column;align-items:stretch}}
 </style></head><body>
 <header class="top"><div class="shell"><nav class="nav"><div class="logo">Hidden<span>Cost</span></div><div class="nav-right">Smart Rental Decisions</div></nav><div class="hero"><div><div class="eyebrow">Rental Comparison, Minus the Surprises!</div><h1>The rent you see isn't always <em>the rent you pay.</em></h1><p>Compare apartments on zillions of factors that matter, <strong>NOT JUST</strong> the monthly rent!</p><button class="cta" id="heroAdd">+ Add an apartment</button></div></div></div></header>
 <main class="shell content"><div class="budgetbar"><div class="budget-heading"><label for="monthlyBudget" class="section-heading">Monthly Housing Budget</label><span class="budget-unit">Enter your maximum monthly housing cost</span></div><div class="budget-input"><span aria-hidden="true">$</span><input id="monthlyBudget" type="number" min="1" placeholder="1,900" inputmode="decimal" aria-label="Monthly Housing Budget in dollars"></div><div class="budget-details"><div id="annualBudget" class="annual-budget" aria-live="polite"><span class="subheading">Approx. Annual Budget</span><span class="annual-value">—</span></div><div id="budgetSummary" class="budget-small">Over-budget apartments remain visible unless filtered.</div></div><button id="exportReport" class="secondary" type="button">↓ Export PDF</button></div>
