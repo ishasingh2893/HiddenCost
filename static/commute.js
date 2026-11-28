@@ -76,6 +76,7 @@ function refreshTable(){
  const tbody=table.querySelector('tbody');
  if(!tbody)return;
  const arr=all(),winners={};
+ const bestColumns=new Set(Array.from(table.querySelectorAll('thead th.best-apartment'),th=>Array.prototype.indexOf.call(th.parentElement.children,th)));
  for(const mode of ['carDistance','carTime','walkTime']){
    const amounts=arr.map(a=>route(a)).filter(Boolean).map(r=>mode==='carDistance'?r.car?.miles:mode==='carTime'?r.car?.minutes:r.walk?.minutes).filter(Number.isFinite);
    winners[mode]=amounts.length===arr.length&&amounts.length>0?Math.min(...amounts):null;
@@ -88,11 +89,12 @@ function refreshTable(){
  for(const [label,mode,format] of rows){
    const tr=document.createElement('tr');tr.dataset.commuteRow='true';
    const name=document.createElement('td');name.textContent=label;tr.appendChild(name);
-   for(const a of arr){
+   for(const [index,a] of arr.entries()){
      const td=document.createElement('td'),r=route(a);
      const amount=r?(mode==='carDistance'?r.car?.miles:mode==='carTime'?r.car?.minutes:r.walk?.minutes):null;
      td.textContent=r?format(r):'Not calculated';
-     if(Number.isFinite(amount)&&winners[mode]!==null&&Math.abs(amount-winners[mode])<0.005)td.className='commute-best';
+     if(bestColumns.has(index+1))td.classList.add('best-apartment');
+     if(Number.isFinite(amount)&&winners[mode]!==null&&Math.abs(amount-winners[mode])<0.005)td.classList.add('commute-best');
      tr.appendChild(td);
    }
    tbody.appendChild(tr);
